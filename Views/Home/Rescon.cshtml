@@ -1,0 +1,34 @@
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restablecer Contraseña | WhaleSports</title>
+  <link rel="stylesheet" href="~/css/rescon.css" />
+</head>
+<body>
+  <div class="container" style="width: 1520px;">
+    <div class="image-side">
+      <img src="/css/Images/Banners/Banner_WS_Negro_Grande.png" alt="WhaleSports Banner" />
+    </div>
+    <div class="form-side">
+      <div class="logo">
+        <img src="/css/Images/Logo_WS.png" alt="WhaleSports Logo" />
+        <h1>WhaleSports</h1>
+      </div>
+      <form asp-action="Rescon" method="post" enctype="multipart/form-data" class="reset-form">
+        <h2>¿OLVIDASTE TU CONTRASEÑA?</h2>
+        <p>No te preocupes, ingresa tu correo electrónico y te enviaremos instrucciones para restablecer tu contraseña</p>
+        <div class="form-group">
+          <input type="email" id="email" name="email" required placeholder="Correo electrónico*" />
+        </div>
+        <div class="form-group">
+          <button type="submit" id="enviar" class="btn-submit">Restaurar Contraseña</button>
+        </div>
+        <div class="form-footer">
+          <a href="@Url.Action("LogIn","Home")">Volver al inicio de sesión</a>
+        </div>
+        <h3 style="color:blue"> @ViewBag.Mensaje</h3>
+      </form>
+    </div>
+  </div>
+</body>

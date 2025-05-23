@@ -1,0 +1,289 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\WS_2-0.bundle.scp.css",
+      "PackagePath": "staticwebassets\\WS_2-0.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_Juan.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_Juan.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_Amarillo.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_Amarillo.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_Azul.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_Azul.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_AzulCeleste.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_AzulCeleste.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_Azul_Grande.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_Azul_Grande.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_EDIAGDFBB.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_EDIAGDFBB.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_Foden.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_Foden.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_LetsDoIt.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_LetsDoIt.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_Negro.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_Negro.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_Negro_Grande.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_Negro_Grande.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_SpecialOffers.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_SpecialOffers.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Banners\\Banner_WS_Verde.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Banners\\Banner_WS_Verde.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Logo_WS.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Logo_WS.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Logo_WS_btn.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Logo_WS_btn.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Hoodie_RAYWS_Negra.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Hoodie_RAYWS_Negra.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Hoodie_RAYWS_Rosa.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Hoodie_RAYWS_Rosa.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Hoodie_RAY_Azul.jpg.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Hoodie_RAY_Azul.jpg.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Hoodie_RAY_Negra.jpg.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Hoodie_RAY_Negra.jpg.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Hoodie_RAY_Verde.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Hoodie_RAY_Verde.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Hoodie_Verde_RAY.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Hoodie_Verde_RAY.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Hoodie_Verde_RAY_FondoGris.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Hoodie_Verde_RAY_FondoGris.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Hoodie_WS _Negra.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Hoodie_WS _Negra.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\P4.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\P4.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\P5.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\P5.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Pantalon_Cargo.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Pantalon_Cargo.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Playera_ASBC_Negra.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Playera_ASBC_Negra.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Playera_Chapulines.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Playera_Chapulines.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Playera_Definicion.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Playera_Definicion.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Playera_JAP.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Playera_JAP.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Playera_Japon.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Playera_Japon.png"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Playera_KLAK_FondoGris.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Playera_KLAK_FondoGris.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Playera_NATY.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Playera_NATY.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Playera_WS_Blanca.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Playera_WS_Blanca.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Playera_WS_Crema.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Playera_WS_Crema.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Playera_klak.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Playera_klak.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Short_Blanco.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\Short_Blanco.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\SuVerdemax.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Productos\\SuVerdemax.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Orca Role.otf",
+      "PackagePath": "staticwebassets\\css\\Orca Role.otf"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Orca Role.ttf",
+      "PackagePath": "staticwebassets\\css\\Orca Role.ttf"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\auth.css",
+      "PackagePath": "staticwebassets\\css\\auth.css"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\footer.css",
+      "PackagePath": "staticwebassets\\css\\footer.css"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\index.css",
+      "PackagePath": "staticwebassets\\css\\index.css"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\nav.css",
+      "PackagePath": "staticwebassets\\css\\nav.css"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\rescon.css",
+      "PackagePath": "staticwebassets\\css\\rescon.css"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\topbar.css",
+      "PackagePath": "staticwebassets\\css\\topbar.css"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\i18n\\english.json",
+      "PackagePath": "staticwebassets\\i18n\\english.json"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\i18n\\espanol.json",
+      "PackagePath": "staticwebassets\\i18n\\espanol.json"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\i18n\\汉语.json",
+      "PackagePath": "staticwebassets\\i18n\\汉语.json"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\idioma.js",
+      "PackagePath": "staticwebassets\\js\\idioma.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\logIn.js",
+      "PackagePath": "staticwebassets\\js\\logIn.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\rescon.js",
+      "PackagePath": "staticwebassets\\js\\rescon.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.WS_2-0.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.WS_2-0.props",
+      "PackagePath": "build\\WS_2-0.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.WS_2-0.props",
+      "PackagePath": "buildMultiTargeting\\WS_2-0.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.WS_2-0.props",
+      "PackagePath": "buildTransitive\\WS_2-0.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

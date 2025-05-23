@@ -1,0 +1,129 @@
+@import url(https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap);
+@import url(https://necolas.github.io/normalize.css/8.0.1/normalize.css);
+
+.topbarP {
+ background-color: #f2f2f2;
+  font-size: 14px;
+  padding: 10px 20px;
+  display: flex;
+  height: 36px;
+  justify-content: flex-end;
+}
+
+.topbarP-list {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.topbarP-list li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.topbarP-list li a:hover {
+  color: #000;
+}
+
+/*Selector de Idiomas*/
+.langs{
+    top: 0;
+    width: 100px;
+    font-weight: bold;
+    position: relative;
+}
+ .langs-dropdown {
+    display: none;
+    position: absolute;
+    background: white;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-top: 5px;
+    border-radius: 4px;
+ }
+ .langs.open .langs-dropdown{
+    display: block;
+ }
+.langs-selected-lang{
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.arrow{
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+.langs.open .arrow{
+    transform: rotate(180deg); /* Gira la flecha al abrir */
+}
+
+.langs ul{
+   margin: 0;
+    padding: 0;
+    background-color: #fff;
+    border: 1px solid #f8f8f8;
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px ;
+    display: none;
+    position: relative;
+    top: 2px;
+    right: 0;
+    width: 125px;
+}
+.langs ul li {
+    list-style: none;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+}
+
+.langs ul li a {
+    text-decoration: none;
+    width: 125px;
+    display: block;
+    padding: 5px 10px;
+}
+
+.langs ul li a:hover {
+    background-color: #f2f2f2;
+}
+
+.langs ul li a:before {
+    content: '';
+    display: inline-block;
+    width: 27px;
+    height: 27px;
+    margin-right: 10px;
+    vertical-align: middle;
+    background-size: contain;
+}
+
+.us:before{
+    background-image: url(https://flagsapi.com/US/flat/32.png);
+}
+
+.mx:before{
+    background-image: url(https://flagsapi.com/MX/flat/32.png);
+}
+
+.cn:before{
+    background-image: url(https://flagsapi.com/CN/flat/32.png);
+}
+.langs ul li a{
+    color: black;
+    text-decoration: none;
+    padding: 12px;
+    font-weight: 650;
+    transition: .3s linear;
+    border-radius: 10%;
+}
+.langs ul li a:hover{
+    background: #d1e0d2;
+}
+.langs ul li a.active{
+    background: #838683;
+}

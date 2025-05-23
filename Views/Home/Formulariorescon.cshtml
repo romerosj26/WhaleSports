@@ -1,0 +1,76 @@
+@model Usuario
+@{
+    ViewData["Title"] = "Formulariorescon";
+}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restablecer Contraseña | WhaleSports</title>
+  <link rel="stylesheet" href="~/css/rescon.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<div class="container" style="width: 1520px;">
+    <div class="image-side">
+        <img src="/css/Images/Banners/Banner_WS_Negro_Grande.png" alt="WhaleSports Banner" />
+    </div>
+    <div class="form-side">
+        <div class="logo">
+            <img src="/css/Images/Logo_WS.png" alt="WhaleSports Logo" />
+            <h1>WhaleSports</h1>
+        </div>
+        <form asp-action="Formulariorescon" method="post" class="reset-form">
+            <h2>CAMBIA TU CONTRASEÑA</h2>
+            <p>Introduce una nueva contraseña</p>
+            <div class="form-group">
+                    <input autocomplete="current-password" type="password" class="w-full border border-grey-g text-grey-a py-2 px-3 rounded" id="nuevaContraseña1"
+                   data-locator-id="loginRegister-loginPassword-input" name="nuevaContraseña" placeholder="Nueva contraseña" data-translation="login.password.placeholder" required="">
+                   <div class="hidden text-error text-xs mt-1"></div>  
+            </div>
+            <div class="form-group">
+                <input autocomplete="current-password" type="password" class="w-full border border-grey-g text-grey-a py-2 px-3 rounded" id="nuevaContraseña2"
+                data-locator-id="loginRegister-loginPassword-input" name="confirmarContraseña" placeholder="Confirma nueva contraseña" data-translation="login.password.placeholder" required=""> 
+            </div> 
+            @*Mensaje de error*@
+            @if (ViewBag.Correcto != null)
+                {
+                    <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;">
+                        @ViewBag.Correcto
+                    </div>
+                }
+
+            <div class="form-group">
+                <input type="hidden" name="token" value="@ViewBag.Token" />
+                <input type="submit" onclick="javascript:confirmar()" class="btn-submit" name="Restablecer" value="Restablecer" />          
+            </div>
+        </form>
+        @if(ViewBag.Correcto  == "Contraseña restablecida correctamente.")
+    {<script>
+        Swal.fire({
+            icon: 'success',
+            title: '¡Listo!',
+            text: 'Tu contraseña ha sido actualizada.',
+            confirmButtonText: 'Ir a login'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '@Url.Action("LogIn", "Home")';
+            }
+        });
+    </script>
+    }
+    </div>
+</div>
+
+<script>
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const p1 = document.getElementById("nuevaContraseña1").value;
+        const p2 = document.getElementById("nuevaContraseña2").value;
+        if (p1 !== p2) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Las contraseñas no coinciden.',
+            });
+        }
+    });
+</script>

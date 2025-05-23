@@ -1,0 +1,95 @@
+@model Usuario
+@{
+    ViewData["Title"] = "LogIn";
+}
+<head>
+    <meta charset="UTF-8">
+    <title>WhaleSports | Iniciar sesión / Registro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/auth.css" />
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-image">
+            <img src="~/css/Images/Banners/Banner_WS_Negro_Grande.png" alt="WhaleSports Banner" />
+        </div>
+        <div class="login-form">
+            <div class="form-wrapper">
+                <div class="logo">
+                    <img src="/css/Images/Logo_WS.png" alt="WhaleSports Logo" />
+                    <h1>WhaleSports</h1>
+                </div>
+                <div class="form-switch">
+                    <a href="#" class="active" id="login-form-link">Iniciar sesión</a>
+                    <a href="#" id="register-form-link">Registrarse</a>
+                </div>
+                <form asp-action="LogIn" method="post" role="form" id="login-form" style="display:block">
+                    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+                    <div class="form-group">
+                        <input autocomplete="username" type="email" id="correo" name="Correo" placeholder="Correo electrónico*" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="contraseña" name="Contraseña" placeholder="Contraseña*" required />
+                    </div>
+                    <button style="al" type="submit">Iniciar sesión</button>
+                    <div class="form-footer">
+                        <a href="@Url.Action("Rescon","Home")">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </form>
+                <form asp-action="SignUp" method="post" id="register-form" role="form" style="display:none">
+                    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+                    <div class="form-group">
+                        <input asp-for="Nombre" class="form-control" type="text" pattern="[A-Za-z]{3,20}" name="Nombre" placeholder="Nombre*" required/>
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Apellidos" class="form-control" type="text" pattern="[A-Za-z \u00E0-\u00FC ]{4,20}" name="Apellidos" placeholder="Apellidos*" required />
+                        <span asp-validation-for="Apellidos" class="text-danger"></span>                    
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Telefono" class="form-control" type="text" pattern="[0-9]{10,10}" minlength="10" maxlength="10" name="Telefono" placeholder="Telefono*" required />
+                        <span asp-validation-for="Telefono" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Correo" class="form-control" type="email" name="Correo" placeholder="Correo electrónico*" required/>
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="Contraseña"
+                         pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}"
+                         title="Debe contener al menos 8 digitos incluyendo mayúsculas, minúsculas y un número" 
+                         data-translation="login.password.placeholder"
+                         placeholder="Contraseña*" required />
+                    </div>
+                <div class="form-group">
+                    <input type="password" name="ConfirmContra" placeholder="Confirmar Contraseña*" required />
+                </div>
+                @* <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3" class="text-center">
+                            <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Registrarse">
+                        </div>
+                    </div>
+                </div> *@
+                    <button type="submit">Registrarse</button>
+            </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("login-form-link").addEventListener("click", function (e) {
+            e.preventDefault();
+            document.getElementById("login-form").style.display = "block";
+            document.getElementById("register-form").style.display = "none";
+            this.classList.add("active");
+            document.getElementById("register-form-link").classList.remove("active");
+        });
+        document.getElementById("register-form-link").addEventListener("click", function (e) {
+            e.preventDefault();
+            document.getElementById("register-form").style.display = "block";
+            document.getElementById("login-form").style.display = "none";
+            this.classList.add("active");
+            document.getElementById("login-form-link").classList.remove("active");
+        });
+    </script>
+</body>
