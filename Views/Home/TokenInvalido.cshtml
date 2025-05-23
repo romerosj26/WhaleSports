@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Token inválido";
+}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Token Inválido | WhaleSports</title>
+    <link rel="stylesheet" href="~/css/rescon.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<div class="container" style="width: 1520px;">
+    <div class="image-side">
+        <img src="/css/Images/Banners/Banner_WS_Negro_Grande.png" alt="WhaleSports Banner" />
+    </div>
+
+    <div class="form-side">
+        <div class="logo">
+            <img src="/css/Images/Logo_WS.png" alt="WhaleSports Logo" />
+            <h1>WhaleSports</h1>
+        </div>
+
+        <div class="alert-container">
+            <h2 style="color: #d9534f;">Enlace inválido o expirado</h2>
+            <p style="margin-bottom: 20px;">
+                Este enlace para restablecer tu contraseña ha caducado o es inválido.
+            </p>
+
+            <a href="@Url.Action("Login", "Home")" class="btn-submit" style="text-align:center;">
+                Volver al login
+            </a>
+        </div>
+    </div>
+</div>
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Token inválido',
+        text: 'Este enlace ha expirado o ya fue usado.',
+        confirmButtonText: 'Ir al login'
+    }).then(() => {
+        window.location.href = '@Url.Action("Login", "Home")';
+    });
+</script>

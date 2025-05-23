@@ -31,6 +31,10 @@ namespace WS_2_0.Models
         public string confirmRescon { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]    
         public DateTime Fecha_Reg { get; set; }
+        //Confirmación de correo
+        public bool EmailConfirmed { get; set; } = false;
+        public string EmailConfirmationToken { get; set; } // Token para confirmar el correo
+        public DateTime? EmailConfirmationTokenExpiry { get; set; } // Fecha de expiración del token
 
         public int ban { get; set; }
 

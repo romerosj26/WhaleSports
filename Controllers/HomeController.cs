@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using WS_2_0.Models;
 using WS_2_0.Models.Logueo;
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.Extensions.Options;
@@ -57,6 +54,7 @@ namespace WS_2_0.Controllers
         [HttpPost]
         public IActionResult SignUp(Usuario usuario)
         {
+            //Validación de la confirmación de contraseña
             if (usuario.Contraseña != usuario.ConfirmContra)
             {
                 ModelState.AddModelError("ConfirmContra", "Las contraseñas no coinciden.");
@@ -81,7 +79,6 @@ namespace WS_2_0.Controllers
                 cmd.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
                 cmd.Parameters.AddWithValue("@Fecha_Reg", usuario.Fecha_Reg);
                 cmd.Parameters.Add("registro", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                //cmd.Parameters.Add("msj", SqlDbType.VarChar, 90).Direction = ParameterDirection.Output;
                 cmd.CommandType = CommandType.StoredProcedure;
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -144,20 +141,14 @@ namespace WS_2_0.Controllers
         [HttpPost]
         public IActionResult Rescon(Usuario usuario, string email)
         {
-            // string asunto = "Recuperación de contraseña";
             string para = usuario.Correo;
-            // var callbackUrl = Url.Action(
-            //     action: "Formulariorescon",
-            //     controller: "Home",
-            //     values: new { email = para },
-            //     protocol: Request.Scheme);
             // string html = $"<!DOCTYPE html><html html lang='es'><body body > <div style='width:600px;padding:20px;border:1px solid #DBDBDB;border-radius:12px;font-family:Sans-serif'> <h1 style='color:#C76F61'>Restablecer contraseña</h1> <p style='margin-bottom:25px'></p> <p style='margin-bottom:25px'>Se solicitó un restablecimiento de contraseña para tu cuenta, haz clic en el botón que aparece a continuación para cambiar tu contraseña.</p> <a href='{callbackUrl}' target='_blank' style='padding:12px;border-radius:12px;background-color:#6181C7;color:#fff;text-decoration:none'>Cambiar contraseña</a> <p style='margin-top:25px'>Gracias.</p> </div> </body> </html>";
             string mensaje = usuario.Nombre;
             try
             {
                  string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
                 Guid token = Guid.NewGuid();
-                DateTime expiration = DateTime.Now.AddHours(1);
+                DateTime expiration = DateTime.Now.AddMinutes(10); //Tiempo de expiración del token
 
                 using SqlConnection conn = new SqlConnection(connStr);
                 conn.Open();
@@ -178,20 +169,24 @@ namespace WS_2_0.Controllers
                 insertCmd.Parameters.AddWithValue("@Expiration", expiration);
                 insertCmd.ExecuteNonQuery();
 
-    // Enlace con el token
-    string resetUrl = Url.Action("Formulariorescon", "Home", new { token = token }, Request.Scheme);
-
-    string asunto = "Recuperación de contraseña";
-    string mensajeHtml = $@"
-    <html>
-      <body>
-        <h2>Restablecimiento de contraseña</h2>
-        <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-        <a href='{resetUrl}'>Restablecer contraseña</a>
-        <p>Este enlace expirará en 1 hora.</p>
-      </body>
-    </html>";
-                _emailService.SendEmail(email, asunto, mensajeHtml);
+                // Creación del link con el token
+                string resetUrl = Url.Action("Formulariorescon", "Home", new { token = token }, Request.Scheme);
+                string asunto = "Recuperación de contraseña";
+                //HTML del correo
+                string html = $@"
+                <!DOCTYPE html>
+                    <html html lang='es'>
+                        <body body > 
+                            <div style='width:600px;padding:20px;border:1px solid #DBDBDB;border-radius:12px;font-family:Sans-serif'> 
+                                <h1 style='color:#C76F61'>Restablecer contraseña</h1> 
+                                <p style='margin-bottom:25px'></p> 
+                                <p style='margin-bottom:25px'>Se solicitó un restablecimiento de contraseña para tu cuenta, haz clic en el botón que aparece a continuación para cambiar tu contraseña.</p> 
+                                <a href='{resetUrl}' target='_blank' style='padding:12px;border-radius:12px;background-color:#6181C7;color:#fff;text-decoration:none'>Cambiar contraseña</a> 
+                                <p style='margin-top:25px'>Gracias.</p> 
+                            </div> 
+                        </body> 
+                    </html>";
+                _emailService.SendEmail(email, asunto, html);
                 
                 ViewBag.Mensaje = "Correo enviado correctamente";
             }
@@ -222,7 +217,7 @@ namespace WS_2_0.Controllers
                     return View();
                 }
             }
-            return RedirectToAction("TokenInvalido");
+            return RedirectToAction("TokenInvalido","Home");
         }
         [HttpPost]
         public IActionResult Formulariorescon(Guid token, string nuevaContraseña, string confirmarContraseña)
@@ -248,7 +243,7 @@ namespace WS_2_0.Controllers
             }
             if (email == null || expiration < DateTime.Now)
             {
-                return RedirectToAction("TokenInvalido");
+                return RedirectToAction("TokenInvalido","Home");
             }
             if (nuevaContraseña != confirmarContraseña)
             {
@@ -272,6 +267,10 @@ namespace WS_2_0.Controllers
             ViewBag.Correcto = "Contraseña restablecida correctamente.";
             return View();
             // return RedirectToAction("ResetCompleto");
+        }
+        public IActionResult TokenInvalido()
+        {
+            return View();
         }
         public IActionResult Perfil()
         {
