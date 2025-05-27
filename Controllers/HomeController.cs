@@ -67,6 +67,7 @@ namespace WS_2_0.Controllers
             string html = $"<!DOCTYPE html> <html lang='es'> <body> <div style='width:600px;padding:20px;border:1px solid #DBDBDB;border-radius:12px;font-family:Sans-serif'> <h1 style='color:#C76F61'>¡WhaleSports Te da la bienvenida!</h1> <p style='margin-bottom:25px'>Estimado/a&nbsp;<b>{usuario.Nombre}</b>:</p> <p style='margin-bottom:25px'>Gracias por unirte a la familia de WhaleSports.</p>  <p style='margin-top:25px'>Gracias.</p> </div> </body> </html>";
             string para = usuario.Correo;
             string mensaje = usuario.Nombre;
+            string token = Guid.NewGuid().ToString();
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
