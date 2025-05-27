@@ -64,7 +64,6 @@ namespace WS_2_0.Controllers
             string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
             bool registro;
             string asunto = "Bienvenido a WhaleSports";
-            string html = $"<!DOCTYPE html> <html lang='es'> <body> <div style='width:600px;padding:20px;border:1px solid #DBDBDB;border-radius:12px;font-family:Sans-serif'> <h1 style='color:#C76F61'>¡WhaleSports Te da la bienvenida!</h1> <p style='margin-bottom:25px'>Estimado/a&nbsp;<b>{usuario.Nombre}</b>:</p> <p style='margin-bottom:25px'>Gracias por unirte a la familia de WhaleSports.</p>  <p style='margin-top:25px'>Gracias.</p> </div> </body> </html>";
             string para = usuario.Correo;
             string mensaje = usuario.Nombre;
             string token = Guid.NewGuid().ToString();
@@ -87,8 +86,18 @@ namespace WS_2_0.Controllers
 
                 if (registro)
                 {
+                    string insertToken = "INSERT INTO EmailConfirmTokens (Token, Email, Expiration) VALUES (@Token, @Email, @Expiration)";
+                    using (SqlCommand tokenCmd = new SqlCommand(insertToken, conn))
+                    {
+                        tokenCmd.Parameters.AddWithValue("@Token", Guid.Parse(token));
+                        tokenCmd.Parameters.AddWithValue("@Email", usuario.Correo);
+                        tokenCmd.Parameters.AddWithValue("@Expiration", DateTime.Now.AddHours(24));
+                        tokenCmd.ExecuteNonQuery();
+                    }
                     try
                     {
+                        string confirmUrl = Url.Action("ConfirmarCorreo", "Home", new { token = token }, Request.Scheme);
+                        string html = $"<!DOCTYPE html> <html lang='es'> <body> <div style='width:600px;padding:20px;border:1px solid #DBDBDB;border-radius:12px;font-family:Sans-serif'> <h1 style='color:#C76F61'>¡WhaleSports Te da la bienvenida!</h1> <p style='margin-bottom:25px'>Estimado/a&nbsp;<b>{usuario.Nombre}</b>:</p> <p style='margin-bottom:25px'>Gracias por unirte a la familia de WhaleSports.</p>  <p style='margin-top:25px'><a href='{confirmUrl}' style='padding:10px 20px;background-color:#C76F61;color:white;border-radius:5px;text-decoration:none;'>Confirmar Correo</a>Gracias.</p> </div> </body> </html>";
                         _emailService.SendEmail(usuario.Correo, asunto, html);
                     }
                     catch (Exception ex)
@@ -96,6 +105,7 @@ namespace WS_2_0.Controllers
                         Console.WriteLine("Error al enviar el correo" + ex.Message);
                         throw;
                     }
+                    
                     return RedirectToAction("LogIn", "Home");
                 }
                 else
@@ -105,6 +115,52 @@ namespace WS_2_0.Controllers
                 }
             }
         }
+        public IActionResult ConfirmarCorreo(Guid token)
+        {
+            string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+            using SqlConnection conn = new SqlConnection(connStr);
+            conn.Open();
+
+            string query = "SELECT Email, Expiration FROM EmailConfirmTokens WHERE Token = @Token";
+            using SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Token", token);
+
+            string email = null;
+            DateTime expiration = DateTime.MinValue;
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    email = reader["Email"].ToString();
+                    expiration = (DateTime)reader["Expiration"];
+                }
+            }
+
+            if (email == null || expiration < DateTime.Now)
+            {
+                return View("TokenInvalido");
+            }
+
+            // Confirmar el correo
+            string update = "UPDATE Usuario SET EmailConfirmed = 1 WHERE Correo = @Email";
+            using (SqlCommand updateCmd = new SqlCommand(update, conn))
+            {
+                updateCmd.Parameters.AddWithValue("@Email", email);
+                updateCmd.ExecuteNonQuery();
+            }
+
+            // Borrar token
+            string delete = "DELETE FROM EmailConfirmTokens WHERE Token = @Token";
+            using (SqlCommand deleteCmd = new SqlCommand(delete, conn))
+            {
+                deleteCmd.Parameters.AddWithValue("@Token", token);
+                deleteCmd.ExecuteNonQuery();
+            }
+
+            return View("CorreoConfirmado");
+        }
+            
         [HttpGet]
         public IActionResult LogIn()
         {

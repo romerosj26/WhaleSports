@@ -18,6 +18,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\sayun\Downloads\WS_2-0
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/sayun/Downloads/WS_2-0/Views/Home/ConfirmarCorreo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb25maXJtYXJDb3JyZW8uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/sayun/Downloads/WS_2-0/Views/Home/Formulariorescon.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxGb3JtdWxhcmlvcmVzY29uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
