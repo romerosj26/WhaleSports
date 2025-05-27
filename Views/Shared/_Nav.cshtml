@@ -21,7 +21,9 @@
             <input class="lng-buscador" type="text" placeholder="Buscar producto...">
             <button><i class="fas fa-search"></i></button>
         </div>
-        <i class="fa fa-user"></i>
+        <form asp-controller="Perfil" asp-action="Index" >
+          <a class="lng-miPerfil" href="@Url.Action("Index", "Perfil")"><i class="fa fa-user"></i></a>
+        </form>
         <i class="fa fa-shopping-bag"></i>
       </div>
     </div>

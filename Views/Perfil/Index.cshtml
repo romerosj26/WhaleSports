@@ -1,0 +1,75 @@
+@model WS_2_0.Models.Usuario
+@Html.AntiForgeryToken()
+@{
+    var id = Context.Session.GetInt32("id_usu");
+    if (id == null)
+    {
+        Context.Response.Redirect("/Home/LogIn");
+    }
+}
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Perfil | WhaleSports</title>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="~/css/perfil.css" rel="stylesheet"  />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+    <header>
+      <!-- TopBar -->
+      <partial name="_TopBar"/>
+      <!-- Header-->
+      <partial name="_Nav"/>
+      <!-- Promociones-->
+      
+    </header>
+<form asp-action="SubirImagen" asp-controller="Perfil" method="post" enctype="multipart/form-data">
+    @* <div class="perfil-img">
+            <img src="@Url.Content(Model.ImagenPerfil != null ? $"~/css/Images/perfiles/ {Model.ImagenPerfil}" : " ~/img/perfil_default.png")" alt="Foto de perfil" width="150" height="150" />
+            <input type="file" name="ImagenFile" accept="image/*" />
+            <button type="submit" class="btn-editar">Subir nueva imagen</button>
+        </div> *@
+</form>
+<div class="perfil-container">
+    <div class="perfil-card">
+        <div class="perfil-left">
+            <img src="~/css/Images/perfiles/@Model.ImagenPerfil" alt="Foto de perfil" class="perfil-foto" />
+        </div>
+        <div class="perfil-right">
+            <form asp-action="PerfilEdit" asp-controller="Perfil" method="get">
+                <button type="submit" class="btn-editar">
+                    <i class="fas fa-pen"></i>
+                </button>
+            </form>
+            <h2>@Model.Nombre @Model.Apellidos</h2>
+            <p>
+                <strong>Correo:</strong> @Model.Correo
+                @if (Model.EmailConfirmed)
+                {
+                    <i class="fas fa-check-circle icon-verificado" title="Correo verificado"></i>
+                }else{
+                    <i class="fas fa-times-circle icon-no-verificado" title="Correo no verificado"></i>
+                }
+            </p>
+            <p><strong>Teléfono:</strong> @Model.Telefono</p>
+            <p><strong>Contraseña:</strong> ********</p>
+            <p><strong>Fecha de Registro:</strong> @Model.Fecha_Reg.ToString("dd/MM/yyyy")</p>
+        </div>
+    </div>
+</div>
+<form asp-action="LogOut" asp-controller="Perfil" method="post">
+    <button type="submit" class="btn-logout">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+    </button>
+</form>
+<script>
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+</script>

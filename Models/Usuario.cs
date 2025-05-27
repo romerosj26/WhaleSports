@@ -8,6 +8,7 @@ namespace WS_2_0.Models
         public int id_adm { get; set; }
 
         [Required(ErrorMessage = "Campo requerido")]
+        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "Campo requerido")]
@@ -35,15 +36,9 @@ namespace WS_2_0.Models
         public bool EmailConfirmed { get; set; } = false;
         public string EmailConfirmationToken { get; set; } // Token para confirmar el correo
         public DateTime? EmailConfirmationTokenExpiry { get; set; } // Fecha de expiración del token
-
+        public IFormFile? ImagenFile { get; set; }
+        public string? ImagenPerfil { get; set; } // nombre del archivo guardado
         public int ban { get; set; }
 
-        public int id_pedido { get; set; }
-        public string nombrePro { get; set; }
-        public string Talla { get; set; }
-        public string Precio { get; set; }
-        public int stock { get; set; }
-        public int Total { get; set; }
-        public int TP { get; set; }
     }
 }

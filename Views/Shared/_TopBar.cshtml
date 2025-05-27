@@ -1,9 +1,21 @@
+@model Usuario
+@inject IHttpContextAccessor HttpContextAccessor
+
 <link href="~/css/topbar.css" rel="stylesheet">
 <body>
     <div class="topbarP">
         <ul class="topbarP-list">
-            <p class="lng-title"><i class="bi bi-person-circle">Hola, @ViewBag.Nombre</i></p>
-            <li><a class="lng-cuenta" href="@Url.Action("LogIn","Home")">Cuenta</a></li>
+            @{
+                var nombre = HttpContextAccessor.HttpContext?.Session.GetString("Nombre");
+            }
+            @if (!string.IsNullOrEmpty(nombre))
+            {
+                <li><span class="lng-title">Hola, </span><span>@nombre</span></li>
+            }
+            else
+            {
+                <li><a class="lng-cuenta" asp-controller="Home" asp-action="LogIn">Cuenta</a></li>
+            }
             <li><a class="lng-ayuda" href="#">Ayuda</a></li>
             <li>
                 <div class="langs">

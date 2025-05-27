@@ -1,0 +1,97 @@
+.perfil-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.perfil-card {
+    display: flex;
+    flex-direction: row;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 30px;
+    max-width: 900px;
+    width: 100%;
+    position: relative;
+    flex-wrap: wrap;
+}
+
+.perfil-left {
+    flex: 1 1 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.perfil-foto {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ccc;
+}
+
+.perfil-right {
+    flex: 2 1 400px;
+    padding-left: 40px;
+    position: relative;
+}
+
+.perfil-right h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.perfil-right p {
+    margin: 8px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.btn-editar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: none;
+    background: none;
+    font-size: 20px;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.btn-editar:hover {
+    color: #000;
+}
+
+.icon-verificado {
+    color: #28a745;
+    margin-left: 6px;
+    font-size: 16px;
+}
+.icon-no-verificado {
+    color: #dc3545; /* rojo */
+    margin-left: 6px;
+    font-size: 16px;
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .perfil-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .perfil-right {
+        padding-left: 0;
+    }
+
+    .btn-editar {
+        top: 10px;
+        right: 10px;
+    }
+}

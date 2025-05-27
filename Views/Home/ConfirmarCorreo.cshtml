@@ -1,4 +1,4 @@
-@{
+@* @{
     ViewData["Title"] = "Correo confirmado";
 }
 
@@ -64,4 +64,16 @@
     .btn-submit:hover {
         background-color: #a85449;
     }
-</style>
+</style> *@
+
+@{
+    ViewBag.Title = "Confirmar Correo";
+}
+
+<h2>Confirmación de correo</h2>
+<p>Hola, estamos por confirmar tu correo electrónico.</p>
+<form asp-action="ConfirmarCorreo" asp-controller="Home" method="post">
+    <input type="hidden" name="email" value="@ViewBag.Email" />
+    <input type="hidden" name="token" value="@ViewBag.Token" />
+    <button type="submit" class="btn btn-primary">Confirmar correo</button>
+</form>

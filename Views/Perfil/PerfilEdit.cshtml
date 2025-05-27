@@ -1,0 +1,78 @@
+@model WS_2_0.Models.Usuario
+
+@{
+    ViewData["Title"] = "Editar Mi Perfil";
+}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Mi Perfil | WhaleSports</title>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="~/css/perfil.css" rel="stylesheet"  />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+    <header>
+      <!-- TopBar -->
+      <partial name="_TopBar"/>
+      <!-- Header-->
+      <partial name="_Nav"/>
+      <!-- Promociones-->
+    </header>
+    
+    <form asp-action="SubirImagen" asp-controller="Perfil" method="post" enctype="multipart/form-data">
+        @* <div class="perfil-img">
+            <img src="@Url.Content(Model.ImagenPerfil != null ? $"~/css/Images/perfiles/ {Model.ImagenPerfil}" : " ~/img/perfil_default.png")" alt="Foto de perfil" width="150" height="150" />
+            <input type="file" name="ImagenFile" accept="image/*" />
+            <button type="submit" class="btn-editar">Subir nueva imagen</button>
+        </div> *@
+    </form>
+    <form asp-action="PerfilEdit" asp-controller="Perfil" method="post">
+        <input asp-for="id_usu" type="hidden" />
+        <div class="perfil-container">
+            <div class="perfil-card">
+                <div class="perfil-foto">
+                    @* <img src="~/img/default-profile.png" alt="Foto de perfil" /> *@
+                </div>
+                <div class="perfil-info">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Nombre</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <input asp-for="Nombre" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0"><strong>Apellidos</strong></p>
+                        </div>
+                        <div class="col-sm-9">
+                            <input asp-for="Apellidos" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Correo</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <input asp-for="Correo" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0"><strong>Telefono</strong></p>
+                        </div>
+                        <div class="col-sm-9">
+                            <input asp-for="Telefono" type="text" class="form-control">
+                        </div>
+                        @* </div>
+                                <h2>@Model.Nombre @Model.Apellidos</h2>
+                                <p><strong>Correo:</strong> @Model.Correo</p>
+                            </div> *@
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Confirmar</button>
+    </form>

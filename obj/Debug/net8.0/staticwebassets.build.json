@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "QZ9QUMsQR8zATvVwSs1JoESGKEQNmM9tIhNst3q43QA=",
+  "Hash": "+6XvKlEWoXMcMe3goq2dLefYasn63oTEWyMkRt/toGc=",
   "Source": "WS_2-0",
   "BasePath": "_content/WS_2-0",
   "Mode": "Default",
@@ -889,6 +889,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\Orca Role.ttf"
+    },
+    {
+      "Identity": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\perfil.css",
+      "SourceId": "WS_2-0",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\",
+      "BasePath": "_content/WS_2-0",
+      "RelativePath": "css/perfil.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\perfil.css"
     },
     {
       "Identity": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\rescon.css",
