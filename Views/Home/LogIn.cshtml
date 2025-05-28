@@ -4,9 +4,10 @@
 }
 <head>
     <meta charset="UTF-8">
-    <title>WhaleSports | Iniciar sesión / Registro</title>
+    <title>LogIn | WhaleSports</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/auth.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="login-container">
@@ -29,9 +30,13 @@
                         <input autocomplete="username" type="email" id="correo" name="Correo" placeholder="Correo electrónico*" required />
                     </div>
                     <div class="form-group">
-                        <input type="password" id="contraseña" name="Contraseña" placeholder="Contraseña*" required />
+                        <input name="Contraseña" type="password" placeholder="Contraseña*" />
                     </div>
-                    <button style="al" type="submit">Iniciar sesión</button>
+                    <div style="display: block; text-align: center; font-size: small; color: red; padding-bottom: 10px;">
+                        @ViewBag.Vali
+                        @ViewBag.Validacion
+                    </div>
+                    <button type="submit" name="Iniciar-Sesion">Iniciar sesión</button>
                     <div class="form-footer">
                         <a href="@Url.Action("Rescon","Home")">¿Olvidaste tu contraseña?</a>
                     </div>
@@ -52,7 +57,7 @@
                     </div>
                     <div class="form-group">
                         <input asp-for="Correo" class="form-control" type="email" name="Correo" placeholder="Correo electrónico*" required/>
-                        <span asp-validation-for="Correo" class="text-danger"></span>
+                        <span asp-validation-for="Correo" class="text-danger" style="display: block; text-align: center; font-size: small; color: red"></span>
                     </div>
                     <div class="form-group">
                         <input type="password" name="Contraseña"
@@ -62,17 +67,32 @@
                          placeholder="Contraseña*" required />
                     </div>
                 <div class="form-group">
-                    <input type="password" name="ConfirmContra" placeholder="Confirmar Contraseña*" required />
+                <input asp-for="ConfirmContra" type="password" name="ConfirmContra" placeholder="Confirmar contraseña*" required />
+                <span asp-validation-for="ConfirmContra" class="text-danger" style="display: block; text-align: center; font-size: small; color: red;"></span>
+
                 </div>
-                @* <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6 col-sm-offset-3" class="text-center">
-                            <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Registrarse">
-                        </div>
+                @if (ViewBag.Correcto != null)
+                {
+                    <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;">
+                        @ViewBag.Correcto
                     </div>
-                </div> *@
-                    <button type="submit">Registrarse</button>
+                }
+                    <button type="submit" onclick="javascript:confirmar()">Registrarse</button>
             </form>
+            @if(ViewBag.Correcto  == "Registrado correctamente.")
+            {<script>
+        Swal.fire({
+            icon: 'success',
+            title: '¡Listo!',
+            text: 'Se ha registrado correctamente.Se le ha enviado un correo de confirmación.',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '@Url.Action("LogIn", "Home")';
+            }
+        });
+    </script>
+    }
             </div>
         </div>
     </div>
@@ -92,4 +112,5 @@
             document.getElementById("login-form-link").classList.remove("active");
         });
     </script>
+
 </body>

@@ -1,9 +1,13 @@
 @model Usuario
+@{
+    ViewData["Title"] = "SignUp";
+}
 <head>
     <meta charset="UTF-8">
-    <title>WhaleSports | Iniciar sesión / Registro</title>
+    <title>SignUp | WhaleSports</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/auth.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="login-container">
@@ -32,12 +36,12 @@
                         <span asp-validation-for="Apellidos" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input asp-for="Telefono" class="form-control" type="text" pattern="[0-9]{10,10}" minlength="10" maxlength="10" name="Telefono*" placeholder="Teléfono" required />
+                        <input asp-for="Telefono" class="form-control" type="text" pattern="[0-9]{10,10}" minlength="10" maxlength="10" placeholder="Teléfono" required />
                         <span asp-validation-for="Telefono" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <input asp-for="Correo" class="form-control" type="email" name="Correo" placeholder="Correo*" required/>
-                        <span asp-validation-for="Correo" class="text-danger"></span>
+                        <span asp-validation-for="Correo" class="text-danger" style="text-align: center; font-size: small; color: red"></span>
                     </div>
                     <div class="form-group">
                         <input type="password" name="Contraseña"
@@ -48,17 +52,56 @@
                     </div>
                 <div class="form-group">
                 <input asp-for="ConfirmContra" type="password" name="ConfirmContra" placeholder="Confirmar contraseña*" required />
-                <span asp-validation-for="ConfirmContra" class="text-danger"></span>
+                <span asp-validation-for="ConfirmContra" class="text-danger" style="display: block; text-align: center; font-size: small; color: red;"></span>
                 </div>
-                @* <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6 col-sm-offset-3" class="text-center">
-                            <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Registrarse">
-                        </div>
+                @if (ViewBag.RegistroCorrecto != null)
+                {
+                    <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;">
+                        @ViewBag.RegistroCorrecto
+                        @ViewBag.RegistroError
                     </div>
-                </div> *@
-                <button type="submit" name="Registrarse">Registrarse</button>
+                }
+                <button type="submit" onclick="javascript:confirmar()" name="Registrarse">Registrarse</button>
             </form>
+            @if(ViewBag.RegistroCorrecto  == "Registrado correctamente.")
+            {<script>
+        Swal.fire({
+            icon: 'success',
+            title: '¡Registro Exitoso!',
+            text: 'Se ha realizado su registro correctamente. Se le ha enviado un correo de confirmación.',
+            confirmButtonText: ' Ok ',
+            background: '#f4f4f4',
+            color: '#333',
+            iconColor: '#28a745',
+            customClass: {
+                popup: 'mi-alerta-popup',
+                title: 'mi-alerta-titulo',
+                confirmButton: 'mi-alerta-boton'
+                }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '@Url.Action("LogIn", "Home")';
+            }
+        });
+    </script>
+    }else if (ViewBag.RegistroError == "Error al enviar el correo electrónico"){
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al Registrarse',
+                        text: 'Nombre ha sido podido realizar el registro. Por favor, inténtelo de nuevo más tarde.',
+                        confirmButtonText: 'Ok',
+                        background: '#f4f4f4',
+                        color: '#333',
+                        iconColor: '#dc3545',
+                        customClass: {
+                            popup: 'mi-alerta-popup',
+                            title: 'mi-alerta-titulo',
+                            confirmButton: 'mi-alerta-boton'
+                        }
+                    });
+                </script>
+    }
             <form asp-action="LogIn" method="post" role="form" id="login-form" style="display:none">
                 <div class="form-group">
                     <label>Correo electrónico</label>

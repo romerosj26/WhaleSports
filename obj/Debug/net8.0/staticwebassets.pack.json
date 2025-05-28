@@ -65,6 +65,14 @@
       "PackagePath": "staticwebassets\\css\\Images\\Logo_WS_btn.png"
     },
     {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Perfiles\\Female.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Perfiles\\Female.jpg"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Perfiles\\Male.jpg",
+      "PackagePath": "staticwebassets\\css\\Images\\Perfiles\\Male.jpg"
+    },
+    {
       "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Productos\\Hoodie_RAYWS_Negra.jpg",
       "PackagePath": "staticwebassets\\css\\Images\\Productos\\Hoodie_RAYWS_Negra.jpg"
     },

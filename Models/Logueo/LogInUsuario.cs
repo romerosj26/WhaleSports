@@ -56,7 +56,7 @@ namespace WS_2_0.Models.Logueo
                         oContacto.Contraseña = dr["Contraseña"].ToString();
                         oContacto.Fecha_Reg = Convert.ToDateTime(dr["Fecha_Reg"]);
                         oContacto.EmailConfirmed = Convert.ToBoolean(dr["EmailConfirmed"]);
-                        oContacto.ImagenPerfil = dr["ImagenPerfil"] != DBNull.Value ? dr["ImagenPerfil"].ToString() : null;
+                        // oContacto.ImagenPerfil = dr["ImagenPerfil"] != DBNull.Value ? dr["ImagenPerfil"].ToString() : null;
                     }
                 }
             }

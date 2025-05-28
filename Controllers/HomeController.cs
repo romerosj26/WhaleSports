@@ -44,70 +44,69 @@ namespace WS_2_0.Controllers
                 ModelState.AddModelError("ConfirmContra", "Las contraseñas no coinciden.");
                 return View("SignUp", usuario);
             }
-
-            string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
-            string asunto = "Bienvenido a WhaleSports";
-            string token = Guid.NewGuid().ToString();
-
-            using (SqlConnection conn = new SqlConnection(connStr))
+            try
             {
-                conn.Open();
-                // Verificar si el correo ya está registrado
-                string checkConfirm = "SELECT EmailConfirmed FROM Usuario WHERE Correo = @Correo";
-                using SqlCommand checkCmd = new SqlCommand(checkConfirm, conn);
+                string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+                string asunto = "Bienvenido a WhaleSports";
+                string token = Guid.NewGuid().ToString();
+
+                using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    checkCmd.Parameters.AddWithValue("@Correo", usuario.Correo);
-                    object confirmed = checkCmd.ExecuteScalar();
-                    if (confirmed != null && confirmed != DBNull.Value)
+                    conn.Open();
+                    // Verificar si el correo ya está registrado
+                    string checkConfirm = "SELECT EmailConfirmed FROM Usuario WHERE Correo = @Correo";
+                    using SqlCommand checkCmd = new SqlCommand(checkConfirm, conn);
                     {
-                        bool confirmado = Convert.ToBoolean(confirmed);
-                        if (confirmado)
+                        checkCmd.Parameters.AddWithValue("@Correo", usuario.Correo);
+                        object confirmed = checkCmd.ExecuteScalar();
+                        if (confirmed != null && confirmed != DBNull.Value)
                         {
-                            ModelState.AddModelError("Correo", "El correo ya está registrado y confirmado.");
-                            return View("SignUp", usuario);
-                        }
-                        else
-                        {
-                            //Correo ya existe, pero no está confirmado, eliminar tokens antiguos
-                            string deletOldToken = "DELETE FROM EmailConfirmTokens WHERE Email = @Email";
-                            using (SqlCommand deletOldTokenCmd = new SqlCommand(deletOldToken, conn))
+                            bool confirmado = Convert.ToBoolean(confirmed);
+                            if (confirmado)
                             {
-                                deletOldTokenCmd.Parameters.AddWithValue("@Email", usuario.Correo);
-                                deletOldTokenCmd.ExecuteNonQuery();
+                                ModelState.AddModelError("Correo", "El correo ya existe, por favor inicie sesión o ingrese otro correo.");
+                                return View("SignUp", usuario);
+                            }
+                            else
+                            {
+                                //Correo ya existe, pero no está confirmado, eliminar tokens antiguos
+                                string deletOldToken = "DELETE FROM EmailConfirmTokens WHERE Email = @Email";
+                                using (SqlCommand deletOldTokenCmd = new SqlCommand(deletOldToken, conn))
+                                {
+                                    deletOldTokenCmd.Parameters.AddWithValue("@Email", usuario.Correo);
+                                    deletOldTokenCmd.ExecuteNonQuery();
+                                }
                             }
                         }
                     }
-                } 
-                //Registra al usuario si no existe
-                SqlCommand cmd = new SqlCommand("RegistroUsuario", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                usuario.Fecha_Reg = DateTime.Now;
-                cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                cmd.Parameters.AddWithValue("@Apellidos", usuario.Apellidos);
-                cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
-                cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
-                cmd.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
-                cmd.Parameters.AddWithValue("@Fecha_Reg", usuario.Fecha_Reg);
-                cmd.Parameters.Add("registro", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                cmd.ExecuteNonQuery();
-                bool registro = Convert.ToBoolean(cmd.Parameters["registro"].Value);
+                    //Registra al usuario si no existe
+                    SqlCommand cmd = new SqlCommand("RegistroUsuario", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    usuario.Fecha_Reg = DateTime.Now;
+                    cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                    cmd.Parameters.AddWithValue("@Apellidos", usuario.Apellidos);
+                    cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
+                    cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
+                    cmd.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
+                    cmd.Parameters.AddWithValue("@Fecha_Reg", usuario.Fecha_Reg);
+                    cmd.Parameters.Add("registro", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.ExecuteNonQuery();
+                    bool registro = Convert.ToBoolean(cmd.Parameters["registro"].Value);
 
-                if (registro)
-                {
-                    // Si el registro fue exitoso, insertar el token de confirmación
-                    string insertToken = "INSERT INTO EmailConfirmTokens (Token, Email, Expiration) VALUES (@Token, @Email, @Expiration)";
-                    using (SqlCommand tokenCmd = new SqlCommand(insertToken, conn))
+                    if (registro)
                     {
-                        tokenCmd.Parameters.AddWithValue("@Token", Guid.Parse(token));
-                        tokenCmd.Parameters.AddWithValue("@Email", usuario.Correo);
-                        tokenCmd.Parameters.AddWithValue("@Expiration", DateTime.Now.AddHours(1)); // Expiración del token en 1 hora
-                        tokenCmd.ExecuteNonQuery();
+                        // Si el registro fue exitoso, insertar el token de confirmación
+                        string insertToken = "INSERT INTO EmailConfirmTokens (Token, Email, Expiration) VALUES (@Token, @Email, @Expiration)";
+                        using (SqlCommand tokenCmd = new SqlCommand(insertToken, conn))
+                        {
+                            tokenCmd.Parameters.AddWithValue("@Token", Guid.Parse(token));
+                            tokenCmd.Parameters.AddWithValue("@Email", usuario.Correo);
+                            tokenCmd.Parameters.AddWithValue("@Expiration", DateTime.Now.AddHours(1)); // Expiración del token en 1 hora
+                            tokenCmd.ExecuteNonQuery();
+                        }
                     }
-                }
-                    try
-                    {
-                        string confirmUrl = Url.Action("ConfirmarCorreo", "Home", new { token = token }, Request.Scheme);
-                        string html = @$"
+                    string confirmUrl = Url.Action("ConfirmarCorreo", "Home", new { token = token }, Request.Scheme);
+                    string html = @$"
                             <!DOCTYPE html>
                                 <html lang='es'>
                                     <body>
@@ -119,16 +118,17 @@ namespace WS_2_0.Controllers
                                         </div>
                                     </body>
                                 </html>";
-                        _emailService.SendEmail(usuario.Correo, asunto, html);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Error al enviar el correo" + ex.Message);
-                        throw;
-                    }
-
-                    return RedirectToAction("LogIn", "Home");
+                    _emailService.SendEmail(usuario.Correo, asunto, html);
+                }
             }
+            catch (Exception ex)
+            {
+                ViewBag.RegistroError = "Error al enviar el correo electrónico";
+                return View("SignUp", usuario);
+            }
+
+            ViewBag.RegistroCorrecto = "Registrado correctamente.";
+            return View();
         }
         [HttpGet]
         public IActionResult ConfirmarCorreo(Guid token)
@@ -198,15 +198,15 @@ namespace WS_2_0.Controllers
             LogInAdministrador.Entrar(usuario, connStr);
             prueba = usuarios;
 
-            if (!usuario.EmailConfirmed)
-            {
-                ViewBag.Vali = "Debes confirmar tu correo antes de iniciar sesión.";
-                Captcha captcha = new Captcha();
-                ViewBag.Cap = captcha.CrearCaptcha();
-                return View();
-            }
             if (usuario.id_usu != 0)
             {
+                if (!usuario.EmailConfirmed)
+                {
+                    ViewBag.Vali = "Debes confirmar tu correo antes de iniciar sesión.";
+                    Captcha captcha = new Captcha();
+                    ViewBag.Cap = captcha.CrearCaptcha();
+                    return View();
+                }
                 HttpContext.Session.SetInt32("id_usu", usuario.id_usu); // Guarda el id del usuario en la sesión
                 HttpContext.Session.SetString("Nombre", usuarios.Nombre); // Guarda el nombre del usuario en la sesión
                 return RedirectToAction("Index", "Home", usuarios);
@@ -215,13 +215,8 @@ namespace WS_2_0.Controllers
             {
                 return RedirectToAction("administrador", "Home");
             }
-            else
-            {
-                ViewBag.Vali = "Correo y/o Contraseña incorrecto";
-                Captcha captcha = new Captcha();
-                ViewBag.Cap = captcha.CrearCaptcha();
-                return View();
-            }
+            ViewBag.Validacion = "Correo y/o Contraseña incorrecto";
+            return View("LogIn", usuario);  
         }
         [HttpGet]
         public IActionResult Rescon()

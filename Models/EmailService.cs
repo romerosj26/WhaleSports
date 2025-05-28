@@ -18,38 +18,45 @@ namespace WS_2_0.Services
 
         public void SendEmail(string to, string subject, string htmlBody)
         {
-            var message = new MailMessage
+            
+                var message = new MailMessage
+                {
+                    From = new MailAddress(_settings.From),
+                    Subject = subject,
+                    IsBodyHtml = true,
+                    Body = htmlBody
+                };
+
+                message.To.Add(to);
+
+                // Vista alternativa HTML
+                message.AlternateViews.Add(
+                    AlternateView.CreateAlternateViewFromString(
+                        htmlBody,
+                        Encoding.UTF8,
+                        MediaTypeNames.Text.Html
+                        )
+                );
+
+                using var smtp = new SmtpClient
+                {
+                    Host = _settings.SmtpServer,
+                    Port = _settings.Port,
+                    EnableSsl = _settings.EnableSsl,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(
+                        _settings.User,
+                        _settings.Password
+                        )
+                };
+                try
             {
-                From = new MailAddress(_settings.From),
-                Subject = subject,
-                IsBodyHtml = true,
-                Body = htmlBody
-            };
-
-            message.To.Add(to);
-
-            // Vista alternativa HTML
-            message.AlternateViews.Add(
-                AlternateView.CreateAlternateViewFromString(
-                    htmlBody,
-                    Encoding.UTF8,
-                    MediaTypeNames.Text.Html
-                    )
-            );
-
-            using var smtp = new SmtpClient
+                smtp.Send(message);
+            }
+            catch (Exception ex)
             {
-                Host = _settings.SmtpServer,
-                Port = _settings.Port,
-                EnableSsl = _settings.EnableSsl,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(
-                    _settings.User,
-                    _settings.Password
-                    )
-            };
-
-            smtp.Send(message);
+                throw;
+            }
         }
     }
 }

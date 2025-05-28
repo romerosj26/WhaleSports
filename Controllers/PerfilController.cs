@@ -28,63 +28,35 @@ namespace WS_2_0.Controllers
             return View(usuario);
         }
         [HttpPost]
-        public async Task<IActionResult> SubirImagen(IFormFile ImagenFile)
+        public async Task<IActionResult> ActualizarFotoPerfil(IFormFile ImagenFile)
         {
-            var idUsuario = HttpContext.Session.GetInt32("id_usu");
-            if (idUsuario == null)
+            if (ImagenFile == null || ImagenFile.Length == 0)
             {
-                return RedirectToAction("LogIn", "Home");
+                return RedirectToAction("Index");
             }
 
-            if (ImagenFile != null && ImagenFile.Length > 0)
+            var extensionesPermitidas = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+            var extension = Path.GetExtension(ImagenFile.FileName).ToLower();
+
+            if (!extensionesPermitidas.Contains(extension))
             {
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(ImagenFile.FileName)}";
-                var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/css/Images/perfiles");
-
-                if (!Directory.Exists(carpeta))
-                {
-                    Directory.CreateDirectory(carpeta);
-                }
-                string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
-                string imagenAnterior = null;
-
-                using (SqlConnection conn = new SqlConnection(connStr))
-                {
-                    conn.Open();
-                    SqlCommand getcmd = new SqlCommand("SELECT ImagenPerfil FROM Usuario WHERE id_usu = @id", conn);
-                    getcmd.Parameters.AddWithValue("@id", idUsuario);
-                    var result = getcmd.ExecuteScalar();
-                    if (result != DBNull.Value)
-                    {
-                        imagenAnterior = result?.ToString();
-                    }
-                }
-                // Borrar imagen anterior si existe
-                if (!string.IsNullOrEmpty(imagenAnterior))
-                {
-                    var rutaImagenAnterior = Path.Combine(carpeta, imagenAnterior);
-                    if (System.IO.File.Exists(rutaImagenAnterior))
-                    {
-                        System.IO.File.Delete(rutaImagenAnterior);
-                    }
-                }
-                // Guardar nueva imagen
-                var path = Path.Combine(carpeta, fileName);
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await ImagenFile.CopyToAsync(stream);
-                }
-
-                // Actualizar el nombre de la imagen en la BD
-                using (SqlConnection conn = new SqlConnection(connStr))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("UPDATE Usuario SET ImagenPerfil = @Imagen WHERE id_usu = @id", conn);
-                    cmd.Parameters.AddWithValue("@Imagen", fileName);
-                    cmd.Parameters.AddWithValue("@id", idUsuario);
-                    cmd.ExecuteNonQuery();
-                }
+                //mostrar error de tipo de archivo no permitido
+                return RedirectToAction("Index");
             }
+            int ? id = HttpContext.Session.GetInt32("id_usu");
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            using var ms = new MemoryStream();
+            await ImagenFile.CopyToAsync(ms);
+
+
+            var usuario = _cru.Obtener((int)id, _configuration.GetConnectionString("StringCONSQLlocal"));
+            usuario.FotoPerfil = ms.ToArray();
+            usuario.FotoPerfilExtension = extension;
+    _cru.cambioFotoPerfil((int)id, ms.ToArray(), extension, _configuration.GetConnectionString("StringCONSQLlocal"));
 
             return RedirectToAction("Index");
         }
@@ -107,6 +79,7 @@ namespace WS_2_0.Controllers
             var actualizado = _cru.Editar(ocontact, connStr);
             if (actualizado)
             {
+                
                 HttpContext.Session.SetString("Nombre", ocontact.Nombre);
                 HttpContext.Session.SetString("Correo", ocontact.Correo);
                 // Opcionalmente, actualizar sesión o TempData

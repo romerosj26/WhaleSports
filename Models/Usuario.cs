@@ -36,8 +36,10 @@ namespace WS_2_0.Models
         public bool EmailConfirmed { get; set; } = false;
         public string EmailConfirmationToken { get; set; } // Token para confirmar el correo
         public DateTime? EmailConfirmationTokenExpiry { get; set; } // Fecha de expiración del token
-        public IFormFile? ImagenFile { get; set; }
-        public string? ImagenPerfil { get; set; } // nombre del archivo guardado
+        
+        public byte[]? FotoPerfil { get; set; } // nombre del archivo original
+        public string? FotoPerfilExtension { get; set; } // Ej: ".jpg", ".png", ".webp"
+
         public int ban { get; set; }
 
     }

@@ -37,7 +37,43 @@
 <div class="perfil-container">
     <div class="perfil-card">
         <div class="perfil-left">
-            <img src="~/css/Images/perfiles/@Model.ImagenPerfil" alt="Foto de perfil" class="perfil-foto" />
+            @if (Model.FotoPerfil != null)
+{
+    var base64 = Convert.ToBase64String(Model.FotoPerfil);
+    var mime = "image/png"; // valor por defecto
+    if (Model.FotoPerfilExtension != null)
+    {
+        if (Model.FotoPerfilExtension == ".jpg" || Model.FotoPerfilExtension == ".jpeg")
+        {
+            mime = "image/jpeg";
+        }
+        else if (Model.FotoPerfilExtension == ".webp")
+        {
+            mime = "image/webp";
+        }
+    }
+    var imgSrc = $"data:{mime};base64,{base64}";
+    <img src="@imgSrc" alt="Foto de perfil" class="perfil-foto" />
+}
+else
+{
+    <img src="~/css/images/Perfiles/Male.jpg" alt="Sin foto" class="perfil-foto" />
+}
+
+            <form asp-action="ActualizarFotoPerfil" asp-controller="Perfil" method="post" enctype="multipart/form-data" class="change-photo-form">
+                <label for="fileInput" class="change-photo-btn">
+                    <i class="fa fa-camera"></i> Cambiar foto
+                </label>
+                <input type="file" name="ImagenFile" id="fileInput" accept="image/*" onchange="previewAndSubmit()" hidden />
+                <script>
+                    function previewAndSubmit() {
+                        const input = document.getElementById('fileInput');
+                        if (input.files.length > 0) {
+                            input.form.submit(); // envía el formulario automáticamente
+                        }
+                    }
+                </script>
+            </form>
         </div>
         <div class="perfil-right">
             <form asp-action="PerfilEdit" asp-controller="Perfil" method="get">
@@ -59,13 +95,14 @@
             <p><strong>Contraseña:</strong> ********</p>
             <p><strong>Fecha de Registro:</strong> @Model.Fecha_Reg.ToString("dd/MM/yyyy")</p>
         </div>
+        <form asp-action="LogOut" asp-controller="Perfil" method="post">
+            <button type="submit" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </button>
+        </form>
+    
     </div>
 </div>
-<form asp-action="LogOut" asp-controller="Perfil" method="post">
-    <button type="submit" class="btn-logout">
-        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-    </button>
-</form>
 <script>
     window.addEventListener('pageshow', function (event) {
         if (event.persisted) {

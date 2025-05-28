@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 
 namespace WS_2_0.Models
@@ -55,6 +56,7 @@ namespace WS_2_0.Models
                         oContacto.Contraseña = dr["Contraseña"].ToString();
                         oContacto.Fecha_Reg = Convert.ToDateTime(dr["Fecha_Reg"]);
                         oContacto.EmailConfirmed = Convert.ToBoolean(dr["EmailConfirmed"]);
+                        oContacto.FotoPerfil = dr["FotoPerfil"] != DBNull.Value ? (byte[])dr["FotoPerfil"] : null;
                     }
                 }
             }
@@ -91,20 +93,20 @@ namespace WS_2_0.Models
             bool rpta;
             // try
             // {
-                using (SqlConnection conn = new SqlConnection(StringdeConexion))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("TEditarUsu", conn);
-                    cmd.Parameters.AddWithValue("id_usu", ocontacto.id_usu);
-                    cmd.Parameters.AddWithValue("Nombre", ocontacto.Nombre);
-                    cmd.Parameters.AddWithValue("Apellidos", ocontacto.Apellidos);
-                    cmd.Parameters.AddWithValue("Correo", ocontacto.Correo);
-                    cmd.Parameters.AddWithValue("Telefono", ocontacto.Telefono);
-                    //cmd.Parameters.AddWithValue("Contraseña", ocontacto.Contraseña);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.ExecuteNonQuery();
-                }
-                rpta = true;
+            using (SqlConnection conn = new SqlConnection(StringdeConexion))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("TEditarUsu", conn);
+                cmd.Parameters.AddWithValue("id_usu", ocontacto.id_usu);
+                cmd.Parameters.AddWithValue("Nombre", ocontacto.Nombre);
+                cmd.Parameters.AddWithValue("Apellidos", ocontacto.Apellidos);
+                cmd.Parameters.AddWithValue("Correo", ocontacto.Correo);
+                cmd.Parameters.AddWithValue("Telefono", ocontacto.Telefono);
+                //cmd.Parameters.AddWithValue("Contraseña", ocontacto.Contraseña);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.ExecuteNonQuery();
+            }
+            rpta = true;
             // }
             // catch (Exception ex)
             // {
@@ -135,6 +137,23 @@ namespace WS_2_0.Models
                 rpta = false;
             }
             return rpta;
+        }
+        public bool cambioFotoPerfil(int id_usu, byte[] fotoPerfil,string extension, string StringdeConexion)
+        {
+            using (SqlConnection conn = new SqlConnection(StringdeConexion))
+            {
+                conn.Open();
+                var query = "UPDATE Usuario SET FotoPerfil = @FotoPerfil, FotoPerfilExtension = @Extension WHERE id_usu = @id_usu";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@FotoPerfil", fotoPerfil);
+                    cmd.Parameters.AddWithValue("@Extension", extension ?? (object)DBNull.Value); // Maneja el caso de extensión nula
+                    cmd.Parameters.AddWithValue("@id_usu", id_usu);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }
+            }
         }
     
     }
