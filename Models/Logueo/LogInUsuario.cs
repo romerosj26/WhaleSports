@@ -1,5 +1,6 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
+using WS_2_0.Models; // Asegúrate de que esta ruta sea correcta para tu proyecto
 
 namespace WS_2_0.Models.Logueo
 {
@@ -8,29 +9,39 @@ namespace WS_2_0.Models.Logueo
         //Valida el correo y la contraseña para iniciar sesion//
         public static Usuario Ingresar(Usuario usuario, string StringdeConexion)
         {
-            using (SqlConnection conn = new SqlConnection(StringdeConexion)) //Conexion a la base de datos//
+            try
             {
-                SqlCommand cmd = new SqlCommand("Val", conn); //Manda a llamar al procedimiento almacenado de Validacion//
-                cmd.Parameters.AddWithValue("@Correo", usuario.Correo); //Obtiene el dato ingresado en el correo//
-                cmd.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);//Obtiene el dato ingresado en la contraseña//
-                cmd.CommandType = CommandType.StoredProcedure;
+                using var conn = new SqlConnection(StringdeConexion); //Conexion a la base de datos//
                 conn.Open();
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using var cmd = new SqlCommand("Val", conn)
                 {
-                    if (reader.Read())
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.AddWithValue("@Correo", usuario.Correo); //Obtiene el dato ingresado en el correo//
+
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    string hashAlmacenado = reader["Contraseña"].ToString();
+                    bool confirmado = Convert.ToBoolean(reader["EmailConfirmed"]);
+
+                    if (PasswordHasher.VerificarContraseña(usuario.Contraseña, hashAlmacenado))
                     {
-                        usuario.id_usu = Convert.ToInt32(reader["id_usu"]);
-                        usuario.EmailConfirmed = Convert.ToBoolean(reader["EmailConfirmed"]);
-                    }
-                    else
-                    {
-                        usuario.id_usu = 0; //Si no se encuentra el correo, se asigna un valor de 0 al id_usu//
-                        usuario.EmailConfirmed = false; //Si no se encuentra el correo, se asigna un valor de false a EmailConfirmed//
+                        return new Usuario
+                        {
+                            id_usu = Convert.ToInt32(reader["id_usu"]),
+                            Correo = reader["Correo"].ToString(),
+                            EmailConfirmed = confirmado
+                        };
                     }
                 }
             }
-            return usuario;
+            catch (SqlException ex)
+            { 
+
+            }
+            return new Usuario {id_usu = 0, EmailConfirmed = false }; //Retorna un usuario nulo si no se encuentra el correo o la contraseña no es correcta//;
         }
         //Obtiene los datos del correo registrado//
         public Usuario Obtener(Usuario usuario, string StringdeConexion)

@@ -95,6 +95,22 @@ else
             <p><strong>Contraseña:</strong> ********</p>
             <p><strong>Fecha de Registro:</strong> @Model.Fecha_Reg.ToString("dd/MM/yyyy")</p>
         </div>
+        @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        @if (TempData["CorreoModificado"] != null)
+        {
+            <text>
+            Swal.fire({
+                icon: 'info',
+                title: 'Correo modificado',
+                text: 'Te hemos enviado un correo para confirmar tu nueva dirección.',
+                confirmButtonText: 'Entendido'
+            });
+            </text>
+        }
+    </script>
+}
         <form asp-action="LogOut" asp-controller="Perfil" method="post">
             <button type="submit" class="btn-logout">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión

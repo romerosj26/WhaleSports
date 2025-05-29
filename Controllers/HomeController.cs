@@ -46,6 +46,7 @@ namespace WS_2_0.Controllers
             }
             try
             {
+                var (hashedPass, salt) = PasswordHasher.HashPassword(usuario.Contraseña);
                 string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
                 string asunto = "Bienvenido a WhaleSports";
                 string token = Guid.NewGuid().ToString();
@@ -87,7 +88,8 @@ namespace WS_2_0.Controllers
                     cmd.Parameters.AddWithValue("@Apellidos", usuario.Apellidos);
                     cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
                     cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
-                    cmd.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
+                    cmd.Parameters.AddWithValue("@Contraseña", hashedPass);
+                    cmd.Parameters.AddWithValue("@Salt", salt);
                     cmd.Parameters.AddWithValue("@Fecha_Reg", usuario.Fecha_Reg);
                     cmd.Parameters.Add("registro", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.ExecuteNonQuery();
@@ -193,7 +195,7 @@ namespace WS_2_0.Controllers
         public IActionResult LogIn(Usuario usuario)
         {
             string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
-            LogInUsuario.Ingresar(usuario, connStr);
+            var usuarioValido = LogInUsuario.Ingresar(usuario, connStr);
             var usuarios = _log.Obtener(usuario, connStr);
             LogInAdministrador.Entrar(usuario, connStr);
             prueba = usuarios;
@@ -207,7 +209,7 @@ namespace WS_2_0.Controllers
                     ViewBag.Cap = captcha.CrearCaptcha();
                     return View();
                 }
-                HttpContext.Session.SetInt32("id_usu", usuario.id_usu); // Guarda el id del usuario en la sesión
+                HttpContext.Session.SetInt32("id_usu", usuarioValido.id_usu); // Guarda el id del usuario en la sesión
                 HttpContext.Session.SetString("Nombre", usuarios.Nombre); // Guarda el nombre del usuario en la sesión
                 return RedirectToAction("Index", "Home", usuarios);
             }

@@ -8,7 +8,7 @@ namespace WS_2_0.Models
         public int id_adm { get; set; }
 
         [Required(ErrorMessage = "Campo requerido")]
-        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "Campo requerido")]
@@ -24,23 +24,30 @@ namespace WS_2_0.Models
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$",
          ErrorMessage = "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.")]
         public string Contraseña { get; set; }
-        
+
         [Required(ErrorMessage = "Debe confirmar la contraseña.")]
         [Compare("Contraseña", ErrorMessage = "Las contraseñas no coinciden.")]
         public string ConfirmContra { get; set; }
         public string newContraseña { get; set; }
         public string confirmRescon { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]    
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime Fecha_Reg { get; set; }
         //Confirmación de correo
         public bool EmailConfirmed { get; set; } = false;
         public string EmailConfirmationToken { get; set; } // Token para confirmar el correo
         public DateTime? EmailConfirmationTokenExpiry { get; set; } // Fecha de expiración del token
-        
+
         public byte[]? FotoPerfil { get; set; } // nombre del archivo original
         public string? FotoPerfilExtension { get; set; } // Ej: ".jpg", ".png", ".webp"
 
         public int ban { get; set; }
 
+    }
+    public class ResultadoEdicionUsuario
+    {
+        public bool Exito { get; set; }
+        public bool CorreoModificado { get; set; }
+        public string Token { get; set; }
+        public string CorreoNuevo { get; set; }
     }
 }
