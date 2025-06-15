@@ -54,7 +54,6 @@ namespace WS_2_0.Models
                         oContacto.Apellidos = dr["Apellidos"].ToString();
                         oContacto.Correo = dr["Correo"].ToString();
                         oContacto.Telefono = dr["Telefono"].ToString();
-                        oContacto.Contraseña = dr["Contraseña"].ToString();
                         oContacto.Fecha_Reg = Convert.ToDateTime(dr["Fecha_Reg"]);
                         oContacto.EmailConfirmed = Convert.ToBoolean(dr["EmailConfirmed"]);
                         oContacto.FotoPerfil = dr["FotoPerfil"] != DBNull.Value ? (byte[])dr["FotoPerfil"] : null;

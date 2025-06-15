@@ -8,7 +8,7 @@ namespace WS_2_0.Models
         public int id_adm { get; set; }
 
         [Required(ErrorMessage = "Campo requerido")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "Campo requerido")]
@@ -24,6 +24,8 @@ namespace WS_2_0.Models
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$",
          ErrorMessage = "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.")]
         public string Contraseña { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
 
         [Required(ErrorMessage = "Debe confirmar la contraseña.")]
         [Compare("Contraseña", ErrorMessage = "Las contraseñas no coinciden.")]
@@ -39,7 +41,7 @@ namespace WS_2_0.Models
 
         public byte[]? FotoPerfil { get; set; } // nombre del archivo original
         public string? FotoPerfilExtension { get; set; } // Ej: ".jpg", ".png", ".webp"
-
+        public bool Activo { get; set; }
         public int ban { get; set; }
 
     }

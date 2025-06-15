@@ -18,61 +18,98 @@
       <partial name="_Nav"/>
       <!-- Promociones-->
     </header>
-    
-    <form asp-action="SubirImagen" asp-controller="Perfil" method="post" enctype="multipart/form-data">
-        @* <div class="perfil-img">
-            <img src="@Url.Content(Model.ImagenPerfil != null ? $"~/css/Images/perfiles/ {Model.ImagenPerfil}" : " ~/img/perfil_default.png")" alt="Foto de perfil" width="150" height="150" />
-            <input type="file" name="ImagenFile" accept="image/*" />
-            <button type="submit" class="btn-editar">Subir nueva imagen</button>
-        </div> *@
-    </form>
     <form asp-action="PerfilEdit" asp-controller="Perfil" method="post">
         <input asp-for="id_usu" type="hidden" />
         <div class="perfil-container">
             <div class="perfil-card">
-                <div class="perfil-foto">
-                    @* <img src="~/img/default-profile.png" alt="Foto de perfil" /> *@
+                <div class="perfil-left">
+            @if (Model.FotoPerfil != null)
+            {
+                var base64 = Convert.ToBase64String(Model.FotoPerfil);
+                var mime = "image/png"; // valor por defecto
+                if (Model.FotoPerfilExtension != null)
+                {
+                if (Model.FotoPerfilExtension == ".jpg" || Model.FotoPerfilExtension == ".jpeg")
+                {
+                    mime = "image/jpeg";
+                }
+                else if (Model.FotoPerfilExtension == ".webp")
+                {
+                    mime = "image/webp";
+                }
+            }
+            var imgSrc = $"data:{mime};base64,{base64}";
+            <img src="@imgSrc" alt="Foto de perfil" />
+            }
+            else
+            {
+                <img id="previewImage" src="~/css/images/Perfiles/Male.jpg" alt="Sin foto" />
+            }
+            <form asp-action="ActualizarFotoPerfil" asp-controller="Perfil" method="post" enctype="multipart/form-data">
+                <label for="fileInput" class="change-photo-btn">
+                    <i class="fa fa-camera"></i> Cambiar foto
+                </label>
+                <input type="file" name="ImagenFile" id="fileInput" accept="image/*" onchange="previewAndSubmit()" hidden />
+                <script>
+                    function previewAndSubmit() {
+                        const input = document.getElementById('fileInput');
+                        if (input.files.length > 0) {
+                            input.form.submit(); // envía el formulario automáticamente
+                        }
+                    }
+                </script>
+            </form>
+        </div>
+                <div class="perfil-right">
+                    <div class="perfil-header">
+                            <h1>
+                                <span style="position: relative; display: inline-block;">
+                                    <input asp-for="Nombre" type="text" class="auto-resize">  
+                                    <span class="input-mirror"></span>
+                                </span>
+                                <span style="position: relative; display: inline-block;">
+                                    <input asp-for="Apellidos" id="" type="text" class="auto-resize">
+                                    <span class="input-mirror"></span>
+                                </span> 
+                            </h1>
+                    </div>
+                    <div class="perfil-info">
+                    <p>
+                        <strong>Correo: </strong><input asp-for="Correo" type="text" class="auto-resize">
+                        <span class="input-mirror"></span>
+                    </p>
+                    <p>
+                        <strong>Telefono: </strong><input asp-for="Telefono" type="text" class="auto-resize">
+                        <span class="input-mirror"></span>
+                    </p>
+                    <p><strong>Contraseña:</strong> ********</p>
+                    <p><strong>Fecha de Registro:</strong> @Model.Fecha_Reg.ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div class="perfil-actions">
+                        <button type="submit" class="btn-confirmar">Confirmar</button>
+                    </div>
                 </div>
-                <div class="perfil-info">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0">Nombre</p>
-                        </div>
-                        <div class="col-sm-9">
-                            <input asp-for="Nombre" type="text" class="form-control">
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0"><strong>Apellidos</strong></p>
-                        </div>
-                        <div class="col-sm-9">
-                            <input asp-for="Apellidos" type="text" class="form-control">
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0">Correo</p>
-                        </div>
-                        <div class="col-sm-9">
-                            <input asp-for="Correo" type="text" class="form-control">
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0"><strong>Telefono</strong></p>
-                        </div>
-                        <div class="col-sm-9">
-                            <input asp-for="Telefono" type="text" class="form-control">
-                        </div>
-                        @* </div>
-                                <h2>@Model.Nombre @Model.Apellidos</h2>
-                                <p><strong>Correo:</strong> @Model.Correo</p>
-                            </div> *@
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Confirmar</button>
     </form>
+    <script>
+        function updateInputWidth(input, mirror) {
+  mirror.textContent = input.value || " ";
+  input.style.width = mirror.offsetWidth + "px";
+}
+
+function setupAutoResizeInputs() {
+  const inputs = document.querySelectorAll(".auto-resize");
+
+  inputs.forEach(input => {
+    const mirror = input.nextElementSibling; // el <span> justo después
+    if (!mirror || !mirror.classList.contains("input-mirror")) return;
+
+    // Inicializa
+    updateInputWidth(input, mirror);
+
+    // Actualiza cada vez que se escribe
+    input.addEventListener("input", () => updateInputWidth(input, mirror));
+  });
+}
+
+window.addEventListener("DOMContentLoaded", setupAutoResizeInputs);
+    </script>

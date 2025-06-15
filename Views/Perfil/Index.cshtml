@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="~/css/perfil.css" rel="stylesheet"  />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />   
 </head>
     <header>
       <!-- TopBar -->
@@ -25,42 +25,33 @@
       <!-- Header-->
       <partial name="_Nav"/>
       <!-- Promociones-->
-      
-    </header>
-<form asp-action="SubirImagen" asp-controller="Perfil" method="post" enctype="multipart/form-data">
-    @* <div class="perfil-img">
-            <img src="@Url.Content(Model.ImagenPerfil != null ? $"~/css/Images/perfiles/ {Model.ImagenPerfil}" : " ~/img/perfil_default.png")" alt="Foto de perfil" width="150" height="150" />
-            <input type="file" name="ImagenFile" accept="image/*" />
-            <button type="submit" class="btn-editar">Subir nueva imagen</button>
-        </div> *@
-</form>
+     </header>
 <div class="perfil-container">
     <div class="perfil-card">
         <div class="perfil-left">
             @if (Model.FotoPerfil != null)
-{
-    var base64 = Convert.ToBase64String(Model.FotoPerfil);
-    var mime = "image/png"; // valor por defecto
-    if (Model.FotoPerfilExtension != null)
-    {
-        if (Model.FotoPerfilExtension == ".jpg" || Model.FotoPerfilExtension == ".jpeg")
-        {
-            mime = "image/jpeg";
-        }
-        else if (Model.FotoPerfilExtension == ".webp")
-        {
-            mime = "image/webp";
-        }
-    }
-    var imgSrc = $"data:{mime};base64,{base64}";
-    <img src="@imgSrc" alt="Foto de perfil" class="perfil-foto" />
-}
-else
-{
-    <img src="~/css/images/Perfiles/Male.jpg" alt="Sin foto" class="perfil-foto" />
-}
-
-            <form asp-action="ActualizarFotoPerfil" asp-controller="Perfil" method="post" enctype="multipart/form-data" class="change-photo-form">
+            {
+                var base64 = Convert.ToBase64String(Model.FotoPerfil);
+                var mime = "image/png"; // valor por defecto
+                if (Model.FotoPerfilExtension != null)
+                {
+                if (Model.FotoPerfilExtension == ".jpg" || Model.FotoPerfilExtension == ".jpeg")
+                {
+                    mime = "image/jpeg";
+                }
+                else if (Model.FotoPerfilExtension == ".webp")
+                {
+                    mime = "image/webp";
+                }
+            }
+            var imgSrc = $"data:{mime};base64,{base64}";
+            <img src="@imgSrc" alt="Foto de perfil" />
+            }
+            else
+            {
+                <img id="previewImage" src="~/css/images/Perfiles/Male.jpg" alt="Sin foto" />
+            }
+            <form asp-action="ActualizarFotoPerfil" asp-controller="Perfil" method="post" enctype="multipart/form-data">
                 <label for="fileInput" class="change-photo-btn">
                     <i class="fa fa-camera"></i> Cambiar foto
                 </label>
@@ -76,53 +67,167 @@ else
             </form>
         </div>
         <div class="perfil-right">
-            <form asp-action="PerfilEdit" asp-controller="Perfil" method="get">
-                <button type="submit" class="btn-editar">
-                    <i class="fas fa-pen"></i>
-                </button>
-            </form>
-            <h2>@Model.Nombre @Model.Apellidos</h2>
-            <p>
-                <strong>Correo:</strong> @Model.Correo
+            <div class="perfil-header">
+                <h1>@Model.Nombre @Model.Apellidos</h1>
+            </div>
+            <div class="perfil-info">
+                <p>
+                    <strong>Correo:</strong> @Model.Correo
                 @if (Model.EmailConfirmed)
                 {
                     <i class="fas fa-check-circle icon-verificado" title="Correo verificado"></i>
                 }else{
                     <i class="fas fa-times-circle icon-no-verificado" title="Correo no verificado"></i>
                 }
-            </p>
-            <p><strong>Teléfono:</strong> @Model.Telefono</p>
-            <p><strong>Contraseña:</strong> ********</p>
-            <p><strong>Fecha de Registro:</strong> @Model.Fecha_Reg.ToString("dd/MM/yyyy")</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8585" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-asterisk-icon lucide-asterisk"></svg>
+                </p>
+                <p><strong>Teléfono:</strong> @Model.Telefono</p>
+                <p>
+                    <strong>Contraseña:</strong> ******** 
+                    <button type="button" onclick="mostrarModal3()" class="btn-editar-contraseña">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </p>
+                <p><strong>Fecha de Registro:</strong> @Model.Fecha_Reg.ToString("dd/MM/yyyy")</p>
+            </div>
+            <div class="perfil-actions">
+                <form asp-action="PerfilEdit" asp-controller="Perfil" method="get">
+                    <button type="submit" class="btn-editar">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </form>
+                <form asp-action="LogOut" asp-controller="Perfil" method="post">
+                    <button type="submit" class="btn-cerrar-sesion">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </form>
+                    <button type="button" onclick="mostrarModal()" class="btn-eliminar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-x-icon lucide-user-round-x"><path d="M2 21a8 8 0 0 1 11.873-7"/><circle cx="10" cy="8" r="5"/><path d="m17 17 5 5"/><path d="m22 17-5 5"/></svg>            
+                    </button>
+            </div>
         </div>
         @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        @if (TempData["CorreoModificado"] != null)
-        {
-            <text>
-            Swal.fire({
-                icon: 'info',
-                title: 'Correo modificado',
-                text: 'Te hemos enviado un correo para confirmar tu nueva dirección.',
-                confirmButtonText: 'Entendido'
-            });
-            </text>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                @if (TempData["CorreoModificado"] != null)
+                {
+                    <text>
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Correo modificado',
+                        text: 'Te hemos enviado un correo para confirmar tu nueva dirección.',
+                        confirmButtonText: 'Entendido'
+                    });
+                    </text>
+                }
+            </script>
         }
-    </script>
-}
-        <form asp-action="LogOut" asp-controller="Perfil" method="post">
-            <button type="submit" class="btn-logout">
-                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-            </button>
-        </form>
-    
     </div>
 </div>
+<!-- Footer-->
+  <partial name="_Footer"/>
+
+<!-- Modal Eliminar-->
+<div id="modalEliminar" class="modal">
+    <form asp-action="EliminarCuenta" asp-controller="Perfil" method="post">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+                <div class="mb-3">
+                    <label class="form-label">Confirma tu contraseña:</label>
+                    <input type="password" name="PasswordConfirm" class="form-control"/>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="submit" class="btn-confirmar">Eliminar</button>
+                <button type="button" onclick="ocultarModal2()" class="btn-cancelar">Cancelar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal Editar Contraseña-->
+<div id="modalContraseña" class="modal">
+    <form asp-action="EditarContraseña" asp-controller="Perfil" method="post">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Contraseña</h5>
+                <button type="button" class="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Para poder cambiar su contraseña, primero debe confirmarla.</p>
+                <br>
+                <div class="mb-3">
+                    <label class="form-label">Confirma tu contraseña:</label>
+                    <input type="password" name="ContraseñaActual" class="form-control"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nueva contraseña:</label>
+                    <input type="password" name="NuevaContraseña" class="form-control"/>
+                </div>
+                <div>
+                    <label>Confirmar nueva contraseña:</label>
+                    <input type="password" name="ConfirmarContraseña" class="form-control">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="submit" class="btn-confirmar">Cambiar contraseña</button>
+                <button type="button" onclick="ocultarModal2()" class="btn-cancelar">Cancelar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal Cerrar Sesión -->
+ <div id="modalLogout" class="modal">
+    <div class="modal-content">
+        <h3>¿Estás seguro que deseas eliminar tu cuenta?</h3>
+        <br>
+        <p>Esta acción eliminará permanentemente tu cuenta y tus datos.</p>
+        <div class="modal-buttons">
+            <button onclick="mostrarModal2(); ocultarModal();" class="btn-confirmar">Sí, eliminar</button>
+            <button onclick="ocultarModal()" class="btn-cancelar">Cancelar</button>
+        </div>
+    </div>
+</div>
+
 <script>
     window.addEventListener('pageshow', function (event) {
         if (event.persisted) {
             window.location.reload();
         }
     });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        window.mostrarModal = function(){
+                    document.getElementById("modalLogout").style.display = "flex";
+        }
+        window.mostrarModal2 = function(){
+        document.getElementById("modalEliminar").style.display = "flex";
+        }
+        window.mostrarModal3 = function(){
+            document.getElementById("modalContraseña").style.display = "flex";
+        }
+    })
+    function ocultarModal() {
+        document.getElementById("modalLogout").style.display = "none";
+    }
+    function ocultarModal2(){
+        document.getElementById("modalEliminar").style.display = "none";
+    }
+    function ocultarModal3(){
+        document.getElementById("modalContraseña").style.display = "none";
+    }
+    function previewFoto(event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            document.getElementById('previewImage').src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
 </script>

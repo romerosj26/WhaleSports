@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using WS_2_0.Models;
+using WS_2_0.Models.Perfil;
 using Microsoft.Extensions.Options;
 using WS_2_0.Services;
+using System.Data;
 
 
 namespace WS_2_0.Controllers
@@ -13,7 +15,7 @@ namespace WS_2_0.Controllers
         private readonly EmailSettings _emailSettings;
         private readonly EmailService _emailService;
 
-        public PerfilController(IConfiguration configuration,IOptions<EmailSettings> emailOptions, EmailService emailService)
+        public PerfilController(IConfiguration configuration, IOptions<EmailSettings> emailOptions, EmailService emailService)
         {
             _configuration = configuration;
             _emailSettings = emailOptions.Value;
@@ -50,7 +52,7 @@ namespace WS_2_0.Controllers
                 //mostrar error de tipo de archivo no permitido
                 return RedirectToAction("Index");
             }
-            int ? id = HttpContext.Session.GetInt32("id_usu");
+            int? id = HttpContext.Session.GetInt32("id_usu");
             if (id == null)
             {
                 return RedirectToAction("Index");
@@ -63,7 +65,7 @@ namespace WS_2_0.Controllers
             var usuario = _cru.Obtener((int)id, _configuration.GetConnectionString("StringCONSQLlocal"));
             usuario.FotoPerfil = ms.ToArray();
             usuario.FotoPerfilExtension = extension;
-    _cru.cambioFotoPerfil((int)id, ms.ToArray(), extension, _configuration.GetConnectionString("StringCONSQLlocal"));
+            _cru.cambioFotoPerfil((int)id, ms.ToArray(), extension, _configuration.GetConnectionString("StringCONSQLlocal"));
 
             return RedirectToAction("Index");
         }
@@ -124,5 +126,113 @@ namespace WS_2_0.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EliminarCuenta(string PasswordConfirm)
+        {
+            int? id = HttpContext.Session.GetInt32("id_usu");
+            if (id == null)
+            {
+                return RedirectToAction("LogIn", "Home");
+            }
+            string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+            byte[] hash = null, salt = null;
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                var cmd = new SqlCommand("SELECT PasswordHash, PasswordSalt FROM Usuario WHERE id_usu = @Id", conn);
+                cmd.Parameters.AddWithValue("@Id", id);
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    if (reader["PasswordHash"] == DBNull.Value || reader["PasswordSalt"] == DBNull.Value)
+                    {
+                        ViewBag.Error = "No se puede verificar la contraseña. Contacta al soporte.";
+                        return RedirectToAction("Perfil");
+                    }
+                    hash = (byte[])reader["PasswordHash"];
+                    salt = (byte[])reader["PasswordSalt"];
+                }
+            }
+            if (PasswordHasher.VerificarContraseña(PasswordConfirm, hash, salt))
+            {
+                // Eliminar cuenta lógicamente
+                using (var conn = new SqlConnection(connStr))
+                {
+                    conn.Open();
+                    var cmd = new SqlCommand("EliminarUsuarioLogico", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdUsuario", id);
+                    cmd.Parameters.AddWithValue("@Descripcion", "Usuario solicitó la eliminación de su cuenta.");
+                    cmd.ExecuteNonQuery();
+                }
+                HttpContext.Session.Clear();
+                return RedirectToAction("Index", "Perfil");
+
+            }
+            TempData["Error"] = "La contraseña ingresada es incorrecta";
+            return RedirectToAction("Index", "Perfil");
+        }
+        [HttpPost]
+        public IActionResult EditarContraseña(EditarContraseñaViewModel model)
+        {
+            int? id = HttpContext.Session.GetInt32("id_usu");
+            if (id == null)
+            {
+                return RedirectToAction("LogIn", "Home");
+            }
+
+            if (model.NuevaContraseña != model.ConfirmarContraseña)
+            {
+                ModelState.AddModelError("ConfirmarContraseña", "Las contraseñas no coinciden.");
+                return RedirectToAction("Index", "Perfil");
+            }
+
+            string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+            using SqlConnection conn = new SqlConnection(connStr);
+            conn.Open();
+
+            string query = @"
+                    SELECT 
+		                PasswordHash,
+		                PasswordSalt
+	                FROM Usuario 
+	                WHERE id_usu = @id_usu
+	                AND Activo = 1";
+
+            using SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@id_usu",id.Value);
+
+            using SqlDataReader reader = cmd.ExecuteReader();                 //la variable reader ejecuta el comando para leer los datos obtenidos del procedimiento almacenado Val//
+            if (!reader.Read())
+            {
+                ModelState.AddModelError("", "Usuario no encontrado");
+                return RedirectToAction("Index", "Perfil");
+            }
+
+            byte[] hashActual = (byte[])reader["PasswordHash"];
+            byte[] saltActual = (byte[])reader["PasswordSalt"];
+
+            if (!PasswordHasher.VerificarContraseña(model.ContraseñaActual, hashActual, saltActual))
+            {
+                ModelState.AddModelError("ContraseñaActual", "La contraseña actual es incorrecta.");
+                return RedirectToAction("Index", "Perfil");
+            }
+            byte[] nuevaSalt = PasswordHasher.GenerateSalt();
+            byte[] nuevoHash = PasswordHasher.HashPassword(model.NuevaContraseña, nuevaSalt);
+
+            reader.Close();
+
+            using (SqlCommand updateCmd = new SqlCommand("UPDATE Usuario SET PasswordHash = @PasswordHash,PasswordSalt=@PasswordSalt  WHERE id_usu = @id_usu", conn))
+            {
+                updateCmd.Parameters.AddWithValue("@id_usu", id.Value);
+                updateCmd.Parameters.Add("@PasswordHash", SqlDbType.VarBinary, nuevoHash.Length).Value = nuevoHash;
+                updateCmd.Parameters.Add("@PasswordSalt", SqlDbType.VarBinary, nuevaSalt.Length).Value = nuevaSalt;
+                updateCmd.ExecuteNonQuery();
+            }
+            TempData["MensajeExito"] = "Contraseña actualizada correctamente.";
+            return RedirectToAction("Index", "Perfil");
+        }
+
     }
 }

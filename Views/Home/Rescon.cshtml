@@ -4,6 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Restablecer Contraseña | WhaleSports</title>
   <link rel="stylesheet" href="~/css/rescon.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <div class="container" style="width: 1520px;">
@@ -21,14 +22,37 @@
         <div class="form-group">
           <input type="email" id="email" name="email" required placeholder="Correo electrónico*" />
         </div>
+        @if (ViewBag.CorreoRestablecer != null)
+                {
+                    <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;">
+                        @ViewBag.CorreoRestablecer
+                    </div>
+                }
         <div class="form-group">
-          <button type="submit" id="enviar" class="btn-submit">Restaurar Contraseña</button>
+          <button type="submit" onclick="javascript:confirmar()" name="Restaurar" id="enviar" class="btn-submit">Restaurar Contraseña</button>
         </div>
         <div class="form-footer">
           <a href="@Url.Action("LogIn","Home")">Volver al inicio de sesión</a>
         </div>
-        <h3 style="color:blue"> @ViewBag.Mensaje</h3>
       </form>
+      @if (ViewBag.CorreoRestablecer == "Correo enviado correctamente"){
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Correo enviado',
+                        text: 'Le hemos enviado un correo con las instrucciones para que pueda restablecer su contraseña.',
+                        confirmButtonText: 'Ok',
+                        background: '#f4f4f4',
+                        color: '#333',
+                        iconColor: '#28a745',
+                        customClass: {
+                            popup: 'mi-alerta-popup',
+                            title: 'mi-alerta-titulo',
+                            confirmButton: 'mi-alerta-boton'
+                        }
+                    });
+                </script>
+                }
     </div>
   </div>
 </body>

@@ -47,9 +47,17 @@
     {<script>
         Swal.fire({
             icon: 'success',
-            title: '¡Listo!',
-            text: 'Tu contraseña ha sido actualizada.',
-            confirmButtonText: 'Ir a login'
+            title: '¡Cambio de Contraseña Exitoso!',
+            text: 'Tu contraseña ha sido actualizada correctamente.',
+            confirmButtonText: 'Ir a login',
+            background: '#f4f4f4',
+            color: '#333',
+            iconColor: '#28a745',
+            customClass: {
+                popup: 'mi-alerta-popup',
+                title: 'mi-alerta-titulo',
+                confirmButton: 'mi-alerta-boton'
+                }
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = '@Url.Action("LogIn", "Home")';

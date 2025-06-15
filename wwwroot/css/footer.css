@@ -116,4 +116,11 @@ footer {
   border-top: 1px solid #333;
   padding-top: 20px;
 }
-
+.Fbtn-logout{
+  background-color: transparent;
+  color: #cccccc;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
