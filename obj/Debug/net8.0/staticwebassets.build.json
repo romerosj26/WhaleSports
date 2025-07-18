@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "J4ZzH5IWxGDP6kIpiCiUt9mIGatr5Ap/yOGVap9+gLw=",
+  "Hash": "KP30qkn2dTOq/hEAHNCMKSwHTX11VvoKV39ez7q/+20=",
   "Source": "WS_2-0",
   "BasePath": "_content/WS_2-0",
   "Mode": "Default",
@@ -53,6 +53,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\sayun\\Downloads\\WS_2-0\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\WS_2-0.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\admin.css",
+      "SourceId": "WS_2-0",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\",
+      "BasePath": "_content/WS_2-0",
+      "RelativePath": "css/admin.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\admin.css"
     },
     {
       "Identity": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\auth.css",
@@ -1060,6 +1079,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\i18n\\汉语.json"
+    },
+    {
+      "Identity": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\admin.js",
+      "SourceId": "WS_2-0",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\",
+      "BasePath": "_content/WS_2-0",
+      "RelativePath": "js/admin.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\admin.js"
     },
     {
       "Identity": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\idioma.js",

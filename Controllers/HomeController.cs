@@ -1,12 +1,12 @@
 using System.Diagnostics;
+using System.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Options;
 using WS_2_0.Models;
 using WS_2_0.Models.Logueo;
-using Microsoft.Data.SqlClient;
-using System.Data;
-using Microsoft.Extensions.Options;
-using WS_2_0.Services;
 using WS_2_0.Models.SignUp;
+using WS_2_0.Services;
 
 namespace WS_2_0.Controllers
 {
@@ -78,7 +78,7 @@ namespace WS_2_0.Controllers
             string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
             using SqlConnection conn = new SqlConnection(connStr);
             conn.Open();
-
+            // Verifica el correo y la expiración relacionado con el token //
             string query = "SELECT Email, Expiration FROM EmailConfirmTokens WHERE Token = @Token";
             using SqlCommand cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@Token", token);
@@ -97,35 +97,33 @@ namespace WS_2_0.Controllers
 
             if (email == null || expiration < DateTime.Now)
             {
-                return View("TokenInvalido");
+                ViewBag.Invalido = "TokenInvalido";
+                return View("ConfirmarCorreo");
             }
-            ViewBag.Email = email;
-            ViewBag.Token = token;
-            return View("ConfirmarCorreo");
-        }
-        [HttpPost]
-        public IActionResult ConfirmarCorreo(string email, Guid token)
-        {
-            string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
-            using SqlConnection conn = new SqlConnection(connStr);
-            conn.Open();
-            // Confirmar el correo
+
+            // Confirma el Correo mediante el token // 
             string update = "UPDATE Usuario SET EmailConfirmed = 1 WHERE Correo = @Email";
             using (SqlCommand updateCmd = new SqlCommand(update, conn))
             {
                 updateCmd.Parameters.AddWithValue("@Email", email);
-                updateCmd.ExecuteNonQuery();
+                // updateCmd.ExecuteNonQuery();
+                int rowsAffected = updateCmd.ExecuteNonQuery();
+                if (rowsAffected > 0)
+                {
+                    // Borra el token del correo relacionado //
+                    string delete = "DELETE FROM EmailConfirmTokens WHERE Token = @Token";
+                    using (SqlCommand deleteCmd = new SqlCommand(delete, conn))
+                    {
+                        deleteCmd.Parameters.AddWithValue("@Token", token);
+                        deleteCmd.ExecuteNonQuery();
+                    }
+                }
             }
-
-            // Borrar token
-            string delete = "DELETE FROM EmailConfirmTokens WHERE Token = @Token";
-            using (SqlCommand deleteCmd = new SqlCommand(delete, conn))
-            {
-                deleteCmd.Parameters.AddWithValue("@Token", token);
-                deleteCmd.ExecuteNonQuery();
-            }
-            return View("CorreoConfirmado");
-        }            
+            
+            ViewBag.Email = email;
+            ViewBag.Token = token;
+            return View("ConfirmarCorreo");
+        }          
         [HttpGet]
         public IActionResult LogIn()
         {
@@ -154,11 +152,12 @@ namespace WS_2_0.Controllers
             }
             else if (usuario.id_adm != 0)
             {
-                return RedirectToAction("administrador", "Home");
+                return RedirectToAction("Index", "Administrador");
             }
             ViewBag.Validacion = "Correo y/o Contraseña incorrecto";
             return View("LogIn", usuario);  
         }
+        //Enviar correo para restablecer contraseña//
         [HttpGet]
         public IActionResult Rescon()
         {

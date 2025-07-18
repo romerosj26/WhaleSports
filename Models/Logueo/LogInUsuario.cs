@@ -19,7 +19,7 @@ namespace WS_2_0.Models.Logueo
                 using var reader = cmd.ExecuteReader();                 //la variable reader ejecuta el comando para leer los datos obtenidos del procedimiento almacenado Val//
                 if (reader.Read())
                 {
-                    
+
                     var hash = (byte[])reader["PasswordHash"];
                     var salt = (byte[])reader["PasswordSalt"];
 
@@ -61,7 +61,7 @@ namespace WS_2_0.Models.Logueo
                     {
                         //Guarda los datos obtenidos dentro de una variable//
                         oContacto.id_usu = Convert.ToInt32(dr["id_usu"]);
-                        #pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
                         oContacto.Nombre = dr["Nombre"].ToString();
                         oContacto.Apellidos = dr["Apellidos"].ToString();
                         oContacto.Correo = dr["Correo"].ToString();
@@ -84,6 +84,23 @@ namespace WS_2_0.Models.Logueo
                 }
             }
             return oContacto;
+        }
+    }
+    public class LogInAdministrador
+    {
+        public static Usuario Entrar(Usuario usu, string StringdeConexion)
+        {
+            using (SqlConnection conn = new SqlConnection(StringdeConexion))
+            {
+                SqlCommand cmd = new SqlCommand("admVal", conn);
+                cmd.Parameters.AddWithValue("@Correo", usu.Correo);
+                cmd.Parameters.AddWithValue("@Contraseña", usu.Contraseña);
+                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
+                cmd.ExecuteScalar();
+                usu.id_adm = Convert.ToInt32(cmd.ExecuteScalar().ToString());
+            }
+            return usu;
         }
     }
 }

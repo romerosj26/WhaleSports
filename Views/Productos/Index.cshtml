@@ -1,0 +1,18 @@
+
+
+<form method="get">
+    <input type="text" name="busqueda" placeholder="Buscar productos..." />
+    <button type="submit">Buscar</button>
+</form>
+
+<div class="productos-container">
+    @foreach (var producto in Model)
+    {
+        <div class="producto-card">
+            <img src="~/images/productos/@producto.ImagenUrl" alt="@producto.Nombre" />
+            <h3>@producto.Nombre</h3>
+            <p>@producto.Descripcion</p>
+            <p><strong>$@producto.Precio</strong></p>
+        </div>
+    }
+</div>

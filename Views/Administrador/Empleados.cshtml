@@ -1,0 +1,69 @@
+@model List<Administrador>
+@{
+    ViewData["Title"] = "Admadmin";
+}
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WhaleSports</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Administrador" asp-action="Admadmin">Administradores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="WPController1" asp-action="TUsuario">Usuarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="WPController1" asp-action="Alma">Almacen</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="card">
+    <div class="card-header">
+        Administradores WhaleSports
+    </div>
+    <div class="card-body">
+        <a asp-action="GuardarEmpleado" asp-controller="Administrador" class="btn btn-success"><i class="bi bi-plus-circle"></i> Crear Administrador</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">idAdministrador</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Telefono</th>
+                    <th scope="col">Contraseña</th>
+                    @* <th scope="col">Fecha_Reg</th> *@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.idAdministrador</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.Apellido</td>
+                        <td>@item.Correo</td>
+                        <td>@item.Telefono</td>
+                        <td>@item.Contraseña</td>
+                        @* <td>@item.Fecha_Reg</td> *@
+                        <td><a asp-action="AdmEditar" asp-controller="Administrador" class="btn btn-primary btm-sm" asp-route-id_adm="@item.idAdministrador"><i class="bi bi-pencil"></i> Editar</a></td>
+                        <td><a asp-action="AdmEliminar" asp-controller="Administrador" class="btn btn-danger btm-sm" asp-route-id_adm="@item.idAdministrador"><i class="bi bi-trash"></i> Eliminar</a></td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

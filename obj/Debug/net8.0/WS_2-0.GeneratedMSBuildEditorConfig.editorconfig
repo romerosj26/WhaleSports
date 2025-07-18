@@ -18,6 +18,18 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\sayun\Downloads\WS_2-0
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/sayun/Downloads/WS_2-0/Views/Administrador/Empleados.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5pc3RyYWRvclxFbXBsZWFkb3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sayun/Downloads/WS_2-0/Views/Administrador/GuardarEmpleado.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5pc3RyYWRvclxHdWFyZGFyRW1wbGVhZG8uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sayun/Downloads/WS_2-0/Views/Administrador/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5pc3RyYWRvclxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/sayun/Downloads/WS_2-0/Views/Home/ConfirmarCorreo.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb25maXJtYXJDb3JyZW8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -56,6 +68,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/sayun/Downloads/WS_2-0/Views/Perfil/PerfilEdit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyZmlsXFBlcmZpbEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sayun/Downloads/WS_2-0/Views/Productos/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/sayun/Downloads/WS_2-0/Views/Shared/NPI/Error.cshtml]

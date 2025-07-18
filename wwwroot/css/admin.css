@@ -1,7 +1,29 @@
 @import url(https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap);
 @import url(https://necolas.github.io/normalize.css/8.0.1/normalize.css);
+ html{
+  scroll-behavior: smooth;
+ }
+/* * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+        height: 100%;
+        width: 100%;
+        display: flex;
+    }
+    body {
+        font-family: 'Titillium Web', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        background-image: url('/css/Images/Banners/Banner_WS_Negro_Grande.png');
+        background-size: cover;
+        background-position: center;
+    } */
 
-.topbarP {
+.topbar {
  background-color: #f2f2f2;
   font-size: 14px;
   padding: 10px 20px;
@@ -10,31 +32,30 @@
   justify-content: flex-end;
 }
 
-.topbarP-list {
+.topbar-list {
   list-style: none;
   display: flex;
   gap: 20px;
 }
-
-.topbarP-list li a {
+.topbar-list li a {
   text-decoration: none;
   color: #333;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
-.topbarP-list li a:hover {
+.topbar-list li a:hover {
   color: #000;
 }
 
-/*Selector de Idiomas*/
-.langs{
+/*Selector de Usuario*/
+.admin{
     top: 0;
     width: 100px;
     font-weight: bold;
     position: relative;
 }
- .langs-dropdown{
+.admin-dropdown {
     display: none;
     position: absolute;
     background: white;
@@ -43,10 +64,10 @@
     margin-top: 5px;
     border-radius: 4px;
  }
- .langs.open .langs-dropdown{
+ .admin.open .admin-dropdown{
     display: block;
  }
-.langs-selected-lang{
+.admin-selected-usu{
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -57,11 +78,10 @@
   transition: transform 0.3s ease;
   display: inline-block;
 }
-.langs.open .arrow{
+.admin.open .arrow{
     transform: rotate(180deg); /* Gira la flecha al abrir */
 }
-
-.langs ul{
+.admin ul{
    margin: 0;
     padding: 0;
     background-color: #fff;
@@ -74,25 +94,25 @@
     right: 0;
     width: 125px;
 }
-.langs ul li {
+.admin ul li {
     list-style: none;
     text-align: left;
     display: flex;
     justify-content: space-between;
 }
 
-.langs ul li a {
+.admin ul li a {
     text-decoration: none;
     width: 125px;
     display: block;
     padding: 5px 10px;
 }
 
-.langs ul li a:hover {
+.admin ul li a:hover {
     background-color: #f2f2f2;
 }
 
-.langs ul li a:before {
+.admin ul li a:before {
     content: '';
     display: inline-block;
     width: 27px;
@@ -102,18 +122,7 @@
     background-size: contain;
 }
 
-.us:before{
-    background-image: url(https://flagsapi.com/US/flat/32.png);
-}
-
-.mx:before{
-    background-image: url(https://flagsapi.com/MX/flat/32.png);
-}
-
-.cn:before{
-    background-image: url(https://flagsapi.com/CN/flat/32.png);
-}
-.langs ul li a{
+.admin ul li a{
     color: black;
     text-decoration: none;
     padding: 12px;
@@ -121,9 +130,9 @@
     transition: .3s linear;
     border-radius: 10%;
 }
-.langs ul li a:hover{
+.admin ul li a:hover{
     background: #d1e0d2;
 }
-.langs ul li a.active{
+/* .admin ul li a.active{
     background: #838683;
-}
+} */

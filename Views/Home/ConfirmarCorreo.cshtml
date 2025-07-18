@@ -1,79 +1,60 @@
-@* @{
-    ViewData["Title"] = "Correo confirmado";
+
+@{
+    ViewBag.Title = "WhaleSports | Confirmación de Correo";
 }
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Correo confirmado | WhaleSports</title>
+    <title>WhaleSports | Confirmación de Correo</title>
     <link rel="stylesheet" href="~/css/rescon.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <div class="container" style="width: 1520px;">
     <div class="image-side">
         <img src="/css/Images/Banners/Banner_WS_Negro_Grande.png" alt="WhaleSports Banner" />
     </div>
+
     <div class="form-side">
         <div class="logo">
             <img src="/css/Images/Logo_WS.png" alt="WhaleSports Logo" />
             <h1>WhaleSports</h1>
         </div>
-
-        <div class="confirmation-box">
-            <h2 class="confirmation-title">¡Correo confirmado exitosamente!</h2>
-            <p class="confirmation-text">Ya puedes iniciar sesión con tu cuenta.</p>
-            <a href="@Url.Action("LogIn", "Home")" class="btn-submit">Ir al login</a>
-        </div>
+        @if (ViewBag.Invalido != "TokenInvalido")
+                {
+                    <script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Confirmación exitosa',
+                            text: 'Gracias por confirmar su correo, ya puede hacer uso de su nueva cuenta en WhaleSports.'
+                        })
+                    </script>
+                    <div class="alert-container">
+                        <h2 style="color: #28a745; text-align: center;">Confirmación exitosa</h2>
+                        <p style="margin-bottom: 20px;">
+                            Gracias por confirmar su correo, ya puede hacer uso de su nueva cuenta en WhaleSports.
+                        </p>
+                    </div>
+                    <div class="alert alert-danger" role="alert" style="margin-bottom: 15px;">
+                        @ViewBag.Correcto
+                    </div>
+                }
+        else{
+            <script>
+                Swal.fire({
+                            icon: 'error',
+                            title: 'Token inválido',
+                            text: 'Este enlace para confirmar su correo ha caducado o es inválido.'
+                        })
+            </script>
+            <div class="alert-container">
+                <h2 style="color: #d9534f; text-align: center;">Token inválido</h2>
+                    <p style="margin-bottom: 20px;">
+                        Este enlace para confirmar su correo ha caducado o es inválido.
+                    </p>
+            </div>
+        }
+        
     </div>
 </div>
-
-<style>
-    .confirmation-box {
-        text-align: center;
-        padding: 30px;
-        background-color: #f9f9f9;
-        border-radius: 12px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        margin-top: 20px;
-    }
-
-    .confirmation-title {
-        font-size: 24px;
-        font-weight: bold;
-        color: #C76F61;
-        margin-bottom: 15px;
-    }
-
-    .confirmation-text {
-        font-size: 16px;
-        color: #333;
-        margin-bottom: 25px;
-    }
-
-    .btn-submit {
-        background-color: #C76F61;
-        color: white;
-        border: none;
-        padding: 12px 25px;
-        border-radius: 8px;
-        font-size: 16px;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-submit:hover {
-        background-color: #a85449;
-    }
-</style> *@
-
-@{
-    ViewBag.Title = "Confirmar Correo";
-}
-
-<h2>Confirmación de correo</h2>
-<p>Hola, estamos por confirmar tu correo electrónico.</p>
-<form asp-action="ConfirmarCorreo" asp-controller="Home" method="post">
-    <input type="hidden" name="email" value="@ViewBag.Email" />
-    <input type="hidden" name="token" value="@ViewBag.Token" />
-    <button type="submit" class="btn btn-primary">Confirmar correo</button>
-</form>

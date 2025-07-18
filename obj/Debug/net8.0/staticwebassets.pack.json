@@ -173,6 +173,10 @@
       "PackagePath": "staticwebassets\\css\\Orca Role.ttf"
     },
     {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\admin.css",
+      "PackagePath": "staticwebassets\\css\\admin.css"
+    },
+    {
       "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\auth.css",
       "PackagePath": "staticwebassets\\css\\auth.css"
     },
@@ -215,6 +219,10 @@
     {
       "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\i18n\\汉语.json",
       "PackagePath": "staticwebassets\\i18n\\汉语.json"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\admin.js",
+      "PackagePath": "staticwebassets\\js\\admin.js"
     },
     {
       "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\idioma.js",
