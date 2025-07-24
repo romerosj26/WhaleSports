@@ -18,12 +18,16 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\sayun\Downloads\WS_2-0
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/sayun/Downloads/WS_2-0/Views/Administrador/Empleados.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5pc3RyYWRvclxFbXBsZWFkb3MuY3NodG1s
+[C:/Users/sayun/Downloads/WS_2-0/Views/Administrador/CrearAdministrador.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5pc3RyYWRvclxDcmVhckFkbWluaXN0cmFkb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/sayun/Downloads/WS_2-0/Views/Administrador/GuardarEmpleado.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5pc3RyYWRvclxHdWFyZGFyRW1wbGVhZG8uY3NodG1s
+[C:/Users/sayun/Downloads/WS_2-0/Views/Administrador/Editar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5pc3RyYWRvclxFZGl0YXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sayun/Downloads/WS_2-0/Views/Administrador/Empleados.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5pc3RyYWRvclxFbXBsZWFkb3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/sayun/Downloads/WS_2-0/Views/Administrador/Index.cshtml]

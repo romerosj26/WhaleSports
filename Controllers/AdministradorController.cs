@@ -1,17 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq;
-using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using WS_2_0.Models;
-using WS_2_0.viewModels;
-using WS_2_0.Data;
+using Microsoft.Extensions.Options;
+using WS_2_0.Services;
+using System.Data;
 
 public class AdministradorController : Controller
 {
     private readonly IConfiguration _config;
     private readonly ILogger<AdministradorController> _logger;
     private readonly IConfiguration _configuration;
-     private readonly ApplicationDbContext _context;
     public AdministradorController(ILogger<AdministradorController> logger, IConfiguration configuration)
     {
         _logger = logger;
@@ -29,38 +28,74 @@ public class AdministradorController : Controller
         return View(olista);
     }
     [HttpGet]
-    public IActionResult GuardarEmpleado()
+    public IActionResult CrearAdministrador()
     {
-        // string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
-        // ViewBag.Roles = _cruadm.ObtenerRoles(connStr);
-        var model = new EmpleadoViewModel
-        {
-            RolesDisponibles = ObtenerRoles()
-        };
-        return View(model);
+        CargarRoles();
+        return View(new Administrador());
     }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult GuardarEmpleado(Administrador ocontacto)
+    public IActionResult CrearAdministrador(Administrador ocontacto)
     {
-        if (!ModelState.IsValid)
-    {
-        // Volver a cargar los roles si hay errores
-        model.RolesDisponibles = _context.Roles
-            .Where(r => r.Activo)
-            .Select(r => new SelectListItem
-            {
-                Value = r.Id.ToString(),
-                Text = r.Nombre
-            }).ToList();
-
-        return View(model);
-    }
         string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+
+        if (!ModelState.IsValid)
+        {
+            CargarRoles(); // recarga la lista si el modelo es inválido
+            return View(ocontacto);
+        }
+        if (_cruadm.ValidarExistenciaAdministrador(ocontacto, connStr))
+        {
+            CargarRoles();
+            ModelState.AddModelError("", "No se pudo guardar el administrador. El administrador ya existe.");
+            return View(ocontacto);
+        }
         var respuesta = _cruadm.Guardar(ocontacto, connStr);
         if (respuesta)
             return RedirectToAction("Empleados");
         else
+        {
+            CargarRoles();
+            ModelState.AddModelError("", "No se pudo guardar el administrador. Verifique los datos o intente más tarde.");
+            return View(ocontacto);
+        }
+    }
+    [HttpGet]
+    public IActionResult Editar(int idAdministrador)
+    {
+        string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+        var ocontacto = _cruadm.Obtener(idAdministrador, connStr);
+        return View(ocontacto);
+    }
+    [HttpPost]
+    public IActionResult Editar(Administrador ocontacto)
+    {
+        string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+        var respuestas = _cruadm.Editar(ocontacto, connStr);
+        if (respuestas)
+            return RedirectToAction("Admadmin");
+        else
             return View();
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Eliminar(Administrador administrador, string PasswordConfirm)
+    {
+        string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+        var respuesta = _cruadm.Eliminar(administrador, PasswordConfirm, connStr);
+
+        if (respuesta.Contraseña == "Contraseña incorrecta.")
+        {
+            TempData["Error"] = "La contraseña ingresada es incorrecta";
+            return RedirectToAction("Empleados", "Administrador");
+
+        }
+        return RedirectToAction("Empleados", "Administrador");
+    }
+    private void CargarRoles()
+    {
+        string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+        ViewBag.Roles = new SelectList(_cruadm.ObtenerRoles(connStr), "Id", "RolNombre");
     }
 }

@@ -1,0 +1,73 @@
+html{
+  scroll-behavior: smooth;
+ }
+ * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+body {
+        background-color: #ddd;
+        font-family: 'Titillium Web', sans-serif;
+    }
+
+    header {
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      background-color: #fff;
+      z-index: 1000;
+    }
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.6);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #161b22;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    color: #e6e6e6;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.modal-buttons {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.btn-confirmar{
+    background-color: #da3633;
+    color: white;
+    padding: 10px 28px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.btn-cancelar{
+    background-color: #30363d;
+    color: white;
+    padding: 10px 28px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.btn-confirmar:hover {
+    background-color: #f85149;
+}
+
+.btn-cancelar:hover {
+    background-color: #484f58;
+}

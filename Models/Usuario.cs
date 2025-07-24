@@ -7,14 +7,14 @@ namespace WS_2_0.Models
     public class Usuario
     {
         public int id_usu { get; set; }
-        public int id_adm { get; set; }
+        public int idAdministrador { get; set; }
 
         [Required(ErrorMessage = "Campo requerido")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "Campo requerido")]
         public string Apellidos { get; set; }
+        
         [Required(ErrorMessage = "Campo requerido")]
         [EmailAddress(ErrorMessage = "Correo no valido")]
         public string Correo { get; set; }
@@ -47,23 +47,41 @@ namespace WS_2_0.Models
     public class Administrador
     {
         public int idAdministrador { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string Correo { get; set; }
-        public string Telefono { get; set; }
-        public string Contraseña { get; set; }
-        public DateTime FechaRegistro { get; set; }
-        public int RolAdminId { get; set; }
-        public RolAdmin Rol { get; set; } = null!;
-    }
-    public class EmpleadoViewModel
-    {
         [Required(ErrorMessage = "El nombre es obligatorio")]
         public string Nombre { get; set; }
+        [Required(ErrorMessage = "El apellido es obligatorio")]
+        public string Apellido { get; set; }
+        [Required(ErrorMessage = "El correo es obligatorio")]
+        [EmailAddress(ErrorMessage = "Correo no válido")]
+        public string Correo { get; set; }
+        public string Telefono { get; set; }
+        [Required(ErrorMessage = "Debe ingresar una contraseña")]
+        [DataType(DataType.Password)]
+        public string Contraseña { get; set; }
+        
+        [Required(ErrorMessage = "Debe seleccionar un rol")]
+        public int RolAdminId { get; set; }
+        public string? RolNombre { get; set; } 
+        public DateTime FechaRegistro { get; set; }
+        public bool Activo { get; set; }
+    }
+    public class AdministradorViewModel
+    {
+        [Required(ErrorMessage = "El Nombre es obligatorio")]
+        public string Nombre { get; set; }
+        [Required(ErrorMessage = "El Apellido es obligatorio")]
+        public string Apellido { get; set; }
 
         [Required(ErrorMessage = "El correo es obligatorio")]
         [EmailAddress]
         public string Correo { get; set; }
+
+        [Required(ErrorMessage = "Debe ingresar una contraseña")]
+        [DataType(DataType.Password)]
+        public string Contraseña { get; set; }
+
+        [Required(ErrorMessage = "Debe ingresar un Telefono")]
+        public string Telefono { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar un rol")]
         public int RolAdminId { get; set; }
@@ -74,25 +92,8 @@ namespace WS_2_0.Models
     public class RolAdmin
     {
         public int Id { get; set; }
-        public string Nombre { get; set; } = null;
+        public string RolNombre { get; set; } = null;
         public string? Descripcion { get; set; }
-        public ICollection<RolPermiso> RolPermisos { get; set; } = new List<RolPermiso>();
         public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
-    }
-    public class Permiso
-    {
-        public int Id { get; set; }
-        public string Nombre { get; set; } = null!;
-        public string? Descripcion { get; set; }
-
-        public ICollection<RolPermiso> RolPermisos { get; set; } = new List<RolPermiso>();
-    }
-    public class RolPermiso
-    {
-        public int RolId { get; set; }
-        public RolAdmin Rol { get; set; } = null!;
-
-        public int PermisoId { get; set; }
-        public Permiso Permiso { get; set; } = null!;
     }
 }

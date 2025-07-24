@@ -150,7 +150,7 @@ namespace WS_2_0.Controllers
                 HttpContext.Session.SetString("Nombre", usuarios.Nombre); // Guarda el nombre del usuario en la sesión
                 return RedirectToAction("Index", "Home", usuarios);
             }
-            else if (usuario.id_adm != 0)
+            else if (usuario.idAdministrador != 0)
             {
                 return RedirectToAction("Index", "Administrador");
             }

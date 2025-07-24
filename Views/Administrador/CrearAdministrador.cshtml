@@ -9,19 +9,22 @@
     <div class="card-body">
 
         <form asp-action="GuardarEmpleado" asp-controller="Administrador" method="post">
-            <form>
+             @Html.AntiForgeryToken()
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Nombre</label>
                         <input asp-for="Nombre" type="text" class="form-control">
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="inputPassword4">Apellidos</label>
+                        <label for="inputPassword4">Apellido</label>
                         <input asp-for="Apellido" type="text" class="form-control">
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Correo</label>
                         <input asp-for="Correo" type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                        <span asp-validation-for="Correo" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword4">Contraseña</label>
@@ -34,16 +37,36 @@
                         <input asp-for="Telefono" type="text" class="form-control">
                     </div>
                 </div>
-                <select asp-for="RolAdminId" asp-items="@(new SelectList(ViewBag.Roles, "Id", "Nombre"))" class="form-control">
-                    <option value="">Seleccione un rol</option>
-                </select>
+                <div class="form-group">
+                    <label asp-for="RolAdminId" class="control-label"></label>
+                    <select asp-for="RolAdminId" class="form-control" asp-items="@(ViewBag.Roles)">
 
-                <select asp-for="RolAdminId" asp-items="Model.RolesDisponibles" class="form-control">
-                    <option value="">Seleccione un rol</option>
-                </select>
+                        <option value="">Seleccione un rol</option>
+                    </select>
+                    <span asp-validation-for="RolAdminId" class="text-danger"></span>
+                </div>
                 <button type="submit" class="btn btn-primary">Crear</button>
                 <a asp-action="Empleados" asp-controller="Administrador" class="btn btn-danger">Cancelar</a>
-            </form>
         </form>
+    @if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+        @foreach (var modelState in ViewData.ModelState)
+        {
+            foreach (var error in modelState.Value.Errors)
+            {
+                <li>@modelState.Key: @error.ErrorMessage</li>
+            }
+        }
+        </ul>
+    </div>
+}
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+}

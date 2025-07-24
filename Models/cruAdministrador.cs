@@ -10,24 +10,28 @@ namespace WS_2_0.Models
         public List<Administrador> Tabla(string StringdeConexion)
         {
             var oTabla = new List<Administrador>();
-            using (SqlConnection conn = new SqlConnection(StringdeConexion))
+            using (SqlConnection connStr = new SqlConnection(StringdeConexion))
             {
-                using (SqlCommand cmd = new SqlCommand("AdmUsua", conn))
+                using (SqlCommand cmd = new SqlCommand("MostrarAdministrador", connStr))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    conn.Open();
+                    connStr.Open();
 
                     var dr = cmd.ExecuteReader();
                     while (dr.Read())
                     {
                         oTabla.Add(new Administrador
                         {
-                            idAdministrador = (int)dr["id_adm"],
+                            idAdministrador = (int)dr["idAdministrador"],
                             Nombre = dr["Nombre"].ToString(),
-                            Apellido = dr["Apellidos"].ToString(),
+                            Apellido = dr["Apellido"].ToString(),
                             Correo = dr["Correo"].ToString(),
                             Telefono = dr["Telefono"].ToString(),
-                            Contraseña = dr["Contraseña"].ToString(),
+                            Contraseña = dr["ContrasenaHash"].ToString(),
+                            RolAdminId = (int)dr["RolAdminId"],
+                            RolNombre = dr["RolNombre"].ToString(),
+                            Activo = (bool)dr["Activo"],
+                            FechaRegistro = (DateTime)dr["FechaRegistro"]
                         });
                     }
                 }
@@ -35,30 +39,45 @@ namespace WS_2_0.Models
             }
         }
 
-        public Administrador Obtener(int id_adm, string StringdeConexion)
+        public Administrador Obtener(int idAdministrador, string StringdeConexion)
         {
             var oContacto = new Administrador();
-            using (SqlConnection conn = new SqlConnection(StringdeConexion))
+            using (SqlConnection connStr = new SqlConnection(StringdeConexion))
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("AdmObtener", conn);
-                cmd.Parameters.AddWithValue("@id_adm", id_adm);
+                connStr.Open();
+                SqlCommand cmd = new SqlCommand("ObtenerAdministrador", connStr);
+                cmd.Parameters.AddWithValue("@idAdministrador", idAdministrador);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using (var dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
-                        oContacto.idAdministrador = Convert.ToInt32(dr["id_adm"]);
+                        oContacto.idAdministrador = Convert.ToInt32(dr["idAdministrador"]);
                         oContacto.Nombre = dr["Nombre"].ToString();
-                        oContacto.Apellido = dr["Apellidos"].ToString();
+                        oContacto.Apellido = dr["Apellido"].ToString();
                         oContacto.Correo = dr["Correo"].ToString();
                         oContacto.Telefono = dr["Telefono"].ToString();
-                        oContacto.Contraseña = dr["Contraseña"].ToString();
+                        oContacto.Contraseña = dr["ContrasenaHash"].ToString();
+                        oContacto.RolAdminId = (int)dr["RolAdminId"];
+                        oContacto.RolNombre = dr["RolNombre"].ToString();
+                        oContacto.Activo = (bool)dr["Activo"];
+                        oContacto.FechaRegistro = (DateTime)dr["FechaRegistro"];
                     }
                 }
             }
             return oContacto;
+        }
+        public bool ValidarExistenciaAdministrador(Administrador administrador, string StringdeConexion)
+        {
+            using (SqlConnection connStr = new SqlConnection(StringdeConexion))
+            {
+                connStr.Open();
+                var cmd = new SqlCommand("SELECT COUNT(*) FROM Administradores WHERE Correo = @Correo", connStr);
+                cmd.Parameters.AddWithValue("@Correo", administrador.Correo);
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
         }
         public bool Guardar(Administrador ocontacto, string StringdeConexion)
         {
@@ -70,9 +89,10 @@ namespace WS_2_0.Models
                 using (SqlConnection connStr = new SqlConnection(StringdeConexion))
                 {
                     connStr.Open();
-                    SqlCommand cmd = new SqlCommand("AdmGuardar", connStr);
+                    SqlCommand cmd = new SqlCommand("GuardarAdministrador", connStr);
+                    ocontacto.FechaRegistro = DateTime.Now;
                     cmd.Parameters.AddWithValue("Nombre", ocontacto.Nombre);
-                    cmd.Parameters.AddWithValue("Apellidos", ocontacto.Apellido);
+                    cmd.Parameters.AddWithValue("Apellido", ocontacto.Apellido);
                     cmd.Parameters.AddWithValue("Correo", ocontacto.Correo);
                     cmd.Parameters.AddWithValue("Telefono", ocontacto.Telefono);
                     cmd.Parameters.Add("@ContrasenaHash", SqlDbType.VarBinary, hash.Length).Value = hash;
@@ -96,10 +116,10 @@ namespace WS_2_0.Models
             bool rptas;
             try
             {
-                using (SqlConnection conn = new SqlConnection(StringdeConexion))
+                using (SqlConnection connStr = new SqlConnection(StringdeConexion))
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("AdmEditar", conn);
+                    connStr.Open();
+                    SqlCommand cmd = new SqlCommand("AdmEditar", connStr);
                     cmd.Parameters.AddWithValue("id_adm", ocontac.idAdministrador);
                     cmd.Parameters.AddWithValue("Nombre", ocontac.Nombre);
                     cmd.Parameters.AddWithValue("Apellidos", ocontac.Apellido);
@@ -119,27 +139,43 @@ namespace WS_2_0.Models
 
             return rptas;
         }
-        public bool Eliminar(int id_adm, string StringdeConexion)
+        public Administrador Eliminar(Administrador administrador, string PasswordConfirm, string StringdeConexion)
         {
-            bool rpta;
-            try
+            byte[] hash = null, salt = null;
+            bool contraseñaCorrecta = false;
+            using (var conn = new SqlConnection(StringdeConexion))
+            {
+                conn.Open();
+                var cmd = new SqlCommand("SELECT ContrasenaHash, ContrasenaSalt FROM Administradores WHERE idAdministrador = @idAdministrador", conn);
+                cmd.Parameters.AddWithValue("@idAdministrador", administrador.idAdministrador);
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    if (reader["ContrasenaHash"] == DBNull.Value || reader["ContrasenaSalt"] == DBNull.Value)
+                    {
+                        hash = (byte[])reader["ContrasenaHash"];
+                        salt = (byte[])reader["ContrasenaSalt"];
+
+                        contraseñaCorrecta = PasswordHasher.VerificarContraseña(PasswordConfirm, hash, salt);
+                    }
+                }
+            }
+            if (contraseñaCorrecta)
             {
                 using (SqlConnection conn = new SqlConnection(StringdeConexion))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("AdmEli", conn);
-                    cmd.Parameters.AddWithValue("id_adm", id_adm);
+                    SqlCommand cmd = new SqlCommand("EliminarAdministrador", conn);
                     cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@idAdministrador", administrador.idAdministrador);
                     cmd.ExecuteNonQuery();
                 }
-                rpta = true;
             }
-            catch (Exception ex)
+            else
             {
-                string error = ex.Message;
-                rpta = false;
+                administrador.Contraseña = "Contraseña incorrecta.";
             }
-            return rpta;
+            return administrador;
         }
         public List<RolAdmin> ObtenerRoles(string connectionString)
         {
@@ -147,14 +183,14 @@ namespace WS_2_0.Models
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT Id, Nombre FROM RolesAdmin", conn);
+                SqlCommand cmd = new SqlCommand("SELECT Id, RolNombre FROM RolesAdmin", conn);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     roles.Add(new RolAdmin
                     {
                         Id = Convert.ToInt32(reader["Id"]),
-                        Nombre = reader["Nombre"].ToString()
+                        RolNombre = reader["RolNombre"].ToString()
                     });
                 }
             }

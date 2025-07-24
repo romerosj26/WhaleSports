@@ -11,7 +11,7 @@ namespace WS_2_0.Models.Logueo
             try
             {
                 using var conn = new SqlConnection(StringdeConexion);   //Conexion a la base de datos//
-                using var cmd = new SqlCommand("Val", conn);            //Manda a llamar al procedimiento almacenado Val el cual hace la validacion del usuario//
+                using var cmd = new SqlCommand("LogInUsuario", conn);            //Manda a llamar al procedimiento almacenado LogInUsuario el cual hace la validacion del usuario//
                 cmd.CommandType = CommandType.StoredProcedure;          //Indica que se va a usar un procedimiento almacenado//
                 cmd.Parameters.AddWithValue("@Correo", usuario.Correo); //Obtiene el dato ingresado en el correo//
 
@@ -88,19 +88,42 @@ namespace WS_2_0.Models.Logueo
     }
     public class LogInAdministrador
     {
-        public static Usuario Entrar(Usuario usu, string StringdeConexion)
+        public static Usuario Entrar(Usuario usuario, string StringdeConexion)
         {
-            using (SqlConnection conn = new SqlConnection(StringdeConexion))
+            try
             {
-                SqlCommand cmd = new SqlCommand("admVal", conn);
-                cmd.Parameters.AddWithValue("@Correo", usu.Correo);
-                cmd.Parameters.AddWithValue("@Contraseña", usu.Contraseña);
-                cmd.CommandType = CommandType.StoredProcedure;
-                conn.Open();
-                cmd.ExecuteScalar();
-                usu.id_adm = Convert.ToInt32(cmd.ExecuteScalar().ToString());
+                using (SqlConnection conn = new SqlConnection(StringdeConexion))
+                {
+                    SqlCommand cmd = new SqlCommand("LogInAdministrador", conn);
+                    cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    conn.Open();
+                    using var reader = cmd.ExecuteReader();                 //la variable reader ejecuta el comando para leer los datos obtenidos del procedimiento almacenado Val//
+                    if (reader.Read())
+                    {
+                        var hash = (byte[])reader["ContrasenaHash"];
+                        var salt = (byte[])reader["ContrasenaSalt"];
+
+                        if (PasswordHasher.VerificarContraseña(usuario.Contraseña, hash, salt))
+                        {
+                            usuario.idAdministrador = Convert.ToInt32(reader["idAdministrador"]);
+                        }
+                        else
+                        {
+                            usuario.idAdministrador = 0;
+                        }
+                    }
+                    else
+                    {
+                        usuario.idAdministrador = 0;
+                    }
+                }
             }
-            return usu;
+            catch (SqlException ex)
+            {
+                Console.WriteLine($"Error de SQL: {ex.Message}");
+            }
+            return usuario;
         }
     }
 }

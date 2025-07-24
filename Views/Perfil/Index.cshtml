@@ -127,7 +127,7 @@
 <!-- Footer-->
   <partial name="_Footer"/>
 
-<!-- Modal Eliminar-->
+<!-- Modal Confirmacón de Eliminar Cuenta-->
 <div id="modalEliminar" class="modal">
     <form asp-action="EliminarCuenta" asp-controller="Perfil" method="post">
         <div class="modal-content">
@@ -182,8 +182,8 @@
     </form>
 </div>
 
-<!-- Modal Cerrar Sesión -->
- <div id="modalLogout" class="modal">
+<!-- Modal Eliminar Cuenta -->
+<div id="modalDelete" class="modal">
     <div class="modal-content">
         <h3>¿Estás seguro que deseas eliminar tu cuenta?</h3>
         <br>
@@ -205,7 +205,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function(){
         window.mostrarModal = function(){
-                    document.getElementById("modalLogout").style.display = "flex";
+                    document.getElementById("modalDelete").style.display = "flex";
         }
         window.mostrarModal2 = function(){
         document.getElementById("modalEliminar").style.display = "flex";
@@ -215,7 +215,7 @@
         }
     })
     function ocultarModal() {
-        document.getElementById("modalLogout").style.display = "none";
+        document.getElementById("modalDelete").style.display = "none";
     }
     function ocultarModal2(){
         document.getElementById("modalEliminar").style.display = "none";
