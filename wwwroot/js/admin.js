@@ -1,41 +1,81 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const admin = document.querySelector('.admin');
-  const selected = admin.querySelector('.admin-selected-usu');
-  const dropdown = admin.querySelector('.admin-dropdown');
-  const links = dropdown.querySelectorAll('a');
 
-  let index = parseInt(localStorage.getItem('adminIndex'), 10) || 0;
+// Dropdown //
+function initCustomDropdowns() {
+  const dropdowns = document.querySelectorAll('.custom-dropdown');
+  console.log("Dropdowns encontrados:", dropdowns.length);
 
-    // Validar índice
-    if (index < 0 || index >= links.length) {
+  dropdowns.forEach((dropdown, i) => {
+    const selected = dropdown.querySelector('.dropdown-selected');
+    const menu = dropdown.querySelector('.dropdown-menu');
+    const links = menu?.querySelectorAll('a');
+    const storageKey = dropdown.dataset.key || `dropdownIndex${i}`;
+
+    if (!selected || !menu || !links || links.length === 0) return;
+
+    let index = parseInt(localStorage.getItem(storageKey), 10);
+    if (isNaN(index) || index < 0 || index >= links.length) {
       index = 0;
-      localStorage.setItem('adminIndex', index);
     }
+    localStorage.setItem(storageKey, index);
 
-  // Inicializar estado visual
-  links.forEach(l => l.classList.remove('active'));
-  if (links[index]) links[index].classList.add('active');
+    links.forEach(link => link.classList.remove('active'));
+    links[index].classList.add('active');
 
-  // Abrir/cerrar el menú al hacer clic
-  selected.addEventListener('click', () => {
-    admin.classList.toggle('open');
+    selected.addEventListener('click', () => {
+      dropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
+
+    links.forEach((link, idx) => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+
+        const active = dropdown.querySelector('a.active');
+        if (active !== link) {
+          active?.classList.remove('active');
+          link.classList.add('active');
+          localStorage.setItem(storageKey, idx);
+        }
+
+        dropdown.classList.remove('open');
+
+        const url = link.dataset.url || link.href;
+        if (url) window.location.href = url;
+      });
+    });
   });
+}
 
-  // Cerrar si se hace clic fuera
-  document.addEventListener('click', (e) => {
-    if (!admin.contains(e.target)) {
-      admin.classList.remove('open');
+document.addEventListener('DOMContentLoaded', initCustomDropdowns);
+
+// Show-Hide Modals //
+let adminAEliminarId = null; 
+
+    document.addEventListener("DOMContentLoaded", function(){
+        window.mostrarModal = function(id){
+            adminAEliminarId = id;
+            document.getElementById("modalDelete").style.display = "flex";
+        }
+        window.mostrarModal2 = function(){
+        document.getElementById("idAdministradorEliminarConfirm").value = adminAEliminarId;
+        document.getElementById("modalConfirmarEliminacion").style.display = "flex";
+        }
+    })
+    function ocultarModal() {
+        document.getElementById("modalDelete").style.display = "none";
     }
-  });
-
-  // Click handler
-  links.forEach((el, i) => el.addEventListener('click', e => {
-    admin.querySelector('a.active')?.classList.remove('active');
-
-    el.classList.add('active');
-    localStorage.setItem('adminIndex', i);
-    admin.classList.remove('open'); // Cierra menú
-
-    //  window.location.href = el.getAttribute('@Url.Action("Empleados", "Administrador")');
-  }));
-  });
+    function ocultarModal2(){
+        document.getElementById("modalConfirmarEliminacion").style.display = "none";
+    }
+    function previewFoto(event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            document.getElementById('previewImage').src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }

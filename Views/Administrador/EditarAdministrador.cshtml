@@ -1,6 +1,6 @@
-@model Administrador
+@model WS_2_0.Models.EditarAdministradorViewModel
 @{
-    ViewData["Title"] = "AdmEditar";
+    ViewData["Title"] = "EditarAdministrador";
 }
 
 <div class="card">
@@ -9,7 +9,7 @@
     </div>
     <div class="card-body">
 
-        <form asp-action="Editar" asp-controller="Administrador" method="post">
+        <form asp-action="EditarAdministrador" asp-controller="Administrador" method="post">
             <input asp-for="idAdministrador" type="hidden" class="form-control">
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -24,10 +24,6 @@
                         <label for="inputEmail4">Correo</label>
                         <input asp-for="Correo" type="email" class="form-control" id="inputEmail4" placeholder="Email">
                     </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputPassword4">Contraseña</label>
-                        <input asp-for="Contraseña" type="password" class="form-control" id="inputPassword4" placeholder="Password">
-                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -35,9 +31,13 @@
                         <input asp-for="Telefono" type="text" class="form-control">
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <label asp-for="RolAdminId" class="control-label"></label>
+                    @Html.DropDownListFor(model => model.RolAdminId, Model.RolesDisponibles, "-- Selecciona un rol --", new { @class = "form-control" })
+                    <span asp-validation-for="RolAdminId" class="text-danger"></span>
+                </div>
                 <button type="submit" class="btn btn-primary">Confirmar</button>
-                <a asp-action="Empleados" asp-controller="Administrador" class="btn btn-danger">Cancelar</a>
+                <a asp-action="Administradores" asp-controller="Administrador" class="btn btn-danger">Cancelar</a>
         </form>
     </div>
 </div>

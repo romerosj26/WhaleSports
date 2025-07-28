@@ -65,6 +65,10 @@
       "PackagePath": "staticwebassets\\css\\Images\\Logo_WS_btn.png"
     },
     {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Logo_WS_btn_Blanco.png",
+      "PackagePath": "staticwebassets\\css\\Images\\Logo_WS_btn_Blanco.png"
+    },
+    {
       "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\Images\\Perfiles\\Female.jpg",
       "PackagePath": "staticwebassets\\css\\Images\\Perfiles\\Female.jpg"
     },
@@ -173,10 +177,6 @@
       "PackagePath": "staticwebassets\\css\\Orca Role.ttf"
     },
     {
-      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\admin.css",
-      "PackagePath": "staticwebassets\\css\\admin.css"
-    },
-    {
       "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\css\\administrador.css",
       "PackagePath": "staticwebassets\\css\\administrador.css"
     },
@@ -227,6 +227,10 @@
     {
       "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\admin.js",
       "PackagePath": "staticwebassets\\js\\admin.js"
+    },
+    {
+      "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\eliminarCache.js",
+      "PackagePath": "staticwebassets\\js\\eliminarCache.js"
     },
     {
       "Id": "C:\\Users\\sayun\\Downloads\\WS_2-0\\wwwroot\\js\\idioma.js",

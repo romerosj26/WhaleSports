@@ -6,38 +6,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Administrador | WhaleSports</title>
-    <link rel="stylesheet" href="~/css/admin.css" />
+    <link rel="stylesheet" href="~/css/administrador.css" />
 </head>
-<header>
-      <!-- TopBar -->
-      <partial name="_TopBar"/>
-      <!-- Header-->
-      <partial name="_Nav"/>
-</header>
+    <header>
+        <!-- TopBar -->
+        <partial name="_TopBarAdministrador"/>
+        <!-- SideBar-->
+        <partial name="_SideBar"/>
+    </header>
 <body>
-<div class="topbar">
-    <ul class="topbar-list">
-        <li>
-            <div class="admin">
-                <div class="admin-selected-usu">
-                    <span>Usuarios</span>
-                    <span class="arrow">&#9662;</span>
-                </div>
-                <ul class="admin-dropdown">
-                    <li>
-                        <a href="@Url.Action("Empleados", "Administrador")">Empleados</a>
-                    </li>
-                    <li>
-                        <a href="#">Clientes</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        <li>Productos</li>
-        <li>Pedidos</li>
-        <li>Reportes/Estadisticas</li>
-    </ul>
-</div>
+
     <p>Bienvenido</p>
-    <script src="/js/admin.js"></script>
+    <script src="/js/admin.js" asp-append-version="true"></script>
 </body>

@@ -34,6 +34,7 @@ namespace WS_2_0.Models
         public DateTime Fecha_Reg { get; set; }
         //Confirmación de correo
         public bool EmailConfirmed { get; set; } = false;
+        public bool Activo { get; set; }
         public byte[]? FotoPerfil { get; set; } // nombre del archivo original
         public string? FotoPerfilExtension { get; set; } // Ej: ".jpg", ".png", ".webp"
     }
@@ -43,57 +44,5 @@ namespace WS_2_0.Models
         public bool CorreoModificado { get; set; }
         public string Token { get; set; }
         public string CorreoNuevo { get; set; }
-    }
-    public class Administrador
-    {
-        public int idAdministrador { get; set; }
-        [Required(ErrorMessage = "El nombre es obligatorio")]
-        public string Nombre { get; set; }
-        [Required(ErrorMessage = "El apellido es obligatorio")]
-        public string Apellido { get; set; }
-        [Required(ErrorMessage = "El correo es obligatorio")]
-        [EmailAddress(ErrorMessage = "Correo no válido")]
-        public string Correo { get; set; }
-        public string Telefono { get; set; }
-        [Required(ErrorMessage = "Debe ingresar una contraseña")]
-        [DataType(DataType.Password)]
-        public string Contraseña { get; set; }
-        
-        [Required(ErrorMessage = "Debe seleccionar un rol")]
-        public int RolAdminId { get; set; }
-        public string? RolNombre { get; set; } 
-        public DateTime FechaRegistro { get; set; }
-        public bool Activo { get; set; }
-    }
-    public class AdministradorViewModel
-    {
-        [Required(ErrorMessage = "El Nombre es obligatorio")]
-        public string Nombre { get; set; }
-        [Required(ErrorMessage = "El Apellido es obligatorio")]
-        public string Apellido { get; set; }
-
-        [Required(ErrorMessage = "El correo es obligatorio")]
-        [EmailAddress]
-        public string Correo { get; set; }
-
-        [Required(ErrorMessage = "Debe ingresar una contraseña")]
-        [DataType(DataType.Password)]
-        public string Contraseña { get; set; }
-
-        [Required(ErrorMessage = "Debe ingresar un Telefono")]
-        public string Telefono { get; set; }
-
-        [Required(ErrorMessage = "Debe seleccionar un rol")]
-        public int RolAdminId { get; set; }
-
-        // Lista de roles para el select
-        public List<SelectListItem> RolesDisponibles { get; set; }
-    }
-    public class RolAdmin
-    {
-        public int Id { get; set; }
-        public string RolNombre { get; set; } = null;
-        public string? Descripcion { get; set; }
-        public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
     }
 }

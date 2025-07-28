@@ -1,0 +1,125 @@
+@model WS_2_0.Models.ViewModels.TablaClientesViewModel
+@Html.AntiForgeryToken()
+@{
+    var id = Context.Session.GetInt32("idAdministrador");
+    if (id == null)
+    {
+        Context.Response.Redirect("/Home/LogIn");
+    }
+}
+@{
+    ViewData["Title"] = "Clientes | WhaleSports";
+}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Clientes | WhaleSports</title>
+        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="~/css/administrador.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />   
+    </head>
+    <body>
+        <header>
+            <!-- TopBar -->
+            <partial name="_TopBarAdministrador"/>
+            <!-- SideBar-->
+            <partial name="_SideBar"/>
+        </header>
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    Clientes WhaleSports
+                </div>
+                <div class="card-body">
+                    <a asp-action="CrearCliente" asp-controller="Administrador" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Crear Cliente
+                    </a>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellido</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Telefono</th>
+                                <th scope="col">Contraseña</th>
+                                <th scope="col">Fecha de Registro</th>
+                                <th scope="col">Email Confirmado</th>
+                                <th scope="col">Activo</th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var usuario in Model.Usuarios)
+                            {
+                                <tr>
+                                    <td>@usuario.id_usu</td>
+                                    <td>@usuario.Nombre</td>
+                                    <td>@usuario.Apellidos</td>
+                                    <td>@usuario.Correo</td>
+                                    <td>@usuario.Telefono</td>
+                                    <td>********</td>
+                                    <td>@usuario.Fecha_Reg</td>
+                                    <td>@usuario.EmailConfirmed</td>
+                                    <td>@usuario.Activo</td>
+                                    <td>
+                                        <a asp-action="EditarCliente" asp-route-id_usu="@usuario.id_usu" class="btn btn-primary">
+                                            <i class="bi bi-pencil"></i> Editar
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <button type="button" onclick="mostrarModal(@usuario.id_usu)" class="btn-eliminar">
+                                            <i class="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Eliminar Cliente -->
+        <div id="modalDelete" class="modal">
+            <div class="modal-content">
+                <h3>¿Estás seguro que deseas eliminar a este cliente?</h3>
+                <br>
+                <p>Esta acción eliminará permanentemente está cuenta y sus datos.</p>
+                <div class="modal-buttons">
+                    <button onclick="mostrarModal2(); ocultarModal();" class="btn-confirmar">Sí, eliminar</button>
+                    <button onclick="ocultarModal()" class="btn-cancelar">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Confirmacón de Eliminar Administrador-->
+        <div id="modalConfirmarEliminacion" class="modal">
+            <form asp-action="Eliminar" asp-controller="Administrador" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas eliminar este administrador? Esta acción no se puede deshacer.</p>
+                        <div class="mb-3">
+                            <label class="form-label">Confirma contraseña:</label>
+                            <input type="password" name="PasswordConfirm" class="form-control"/>
+                            <input type="hidden" id="idAdministradorEliminarConfirm" name="idAdministrador" value="" />
+                        </div>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="submit" class="btn-confirmar">Eliminar</button>
+                        <button type="button" onclick="ocultarModal2()" class="btn-cancelar">Cancelar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script src="/js/admin.js" asp-append-version="true"></script>
+        <script src="/js/eliminarCache.js"></script>
+    </body>
+</html>

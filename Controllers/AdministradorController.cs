@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient;
 using WS_2_0.Models;
+using WS_2_0.Models.ViewModels;
 using Microsoft.Extensions.Options;
 using WS_2_0.Services;
 using System.Data;
@@ -16,86 +16,240 @@ public class AdministradorController : Controller
         _logger = logger;
         _configuration = configuration;
     }
-    cruAdministrador _cruadm = new cruAdministrador();
+    crudAdministrador _crudadm = new crudAdministrador();
+    crudClientes _crudclientes = new crudClientes();
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Index()
     {
         return View();
     }
-    public IActionResult Empleados()
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Administradores()
     {
+        int? id = HttpContext.Session.GetInt32("idAdministrador");
+        if (id == null)
+        {
+            return RedirectToAction("LogIn", "Home");
+        }
         string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
-        var olista = _cruadm.Tabla(connStr);
+        var olista = _crudadm.Tabla(connStr);
         return View(olista);
     }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [HttpGet]
     public IActionResult CrearAdministrador()
     {
-        CargarRoles();
-        return View(new Administrador());
+        var viewModel = new CrearAdministradorViewModel
+        {
+            RolesDisponibles = ObtenerRolesParaSelect()
+        };
+        return View(viewModel);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult CrearAdministrador(Administrador ocontacto)
+    public IActionResult CrearAdministrador(CrearAdministradorViewModel model)
     {
         string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
 
         if (!ModelState.IsValid)
         {
-            CargarRoles(); // recarga la lista si el modelo es inválido
-            return View(ocontacto);
+            model.RolesDisponibles = ObtenerRolesParaSelect(); // importante: recargar el select
+            return View(model);
         }
-        if (_cruadm.ValidarExistenciaAdministrador(ocontacto, connStr))
+        var nuevoAdmin = new Administrador
         {
-            CargarRoles();
+            Nombre = model.Nombre,
+            Apellido = model.Apellido,
+            Correo = model.Correo,
+            Contraseña = model.Contraseña,
+            Telefono = model.Telefono,
+            RolAdminId = model.RolAdminId
+        };
+        if (_crudadm.ValidarExistenciaAdministrador(nuevoAdmin, connStr))
+        {
+            model.RolesDisponibles = ObtenerRolesParaSelect();
             ModelState.AddModelError("", "No se pudo guardar el administrador. El administrador ya existe.");
-            return View(ocontacto);
+            return View(model);
         }
-        var respuesta = _cruadm.Guardar(ocontacto, connStr);
+        var respuesta = _crudadm.Guardar(nuevoAdmin, connStr);
         if (respuesta)
-            return RedirectToAction("Empleados");
+            return RedirectToAction("Administradores");
         else
         {
-            CargarRoles();
+            model.RolesDisponibles = ObtenerRolesParaSelect();
             ModelState.AddModelError("", "No se pudo guardar el administrador. Verifique los datos o intente más tarde.");
-            return View(ocontacto);
+            return View(model);
         }
     }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [HttpGet]
-    public IActionResult Editar(int idAdministrador)
+    public IActionResult EditarAdministrador(int idAdministrador)
     {
         string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
-        var ocontacto = _cruadm.Obtener(idAdministrador, connStr);
-        return View(ocontacto);
+        var ocontacto = _crudadm.Obtener(idAdministrador, connStr);
+        if (ocontacto == null)
+            return NotFound();
+
+        var viewModel = new EditarAdministradorViewModel
+        {
+            idAdministrador = ocontacto.idAdministrador,
+            Nombre = ocontacto.Nombre,
+            Apellido = ocontacto.Apellido,
+            Correo = ocontacto.Correo,
+            Telefono = ocontacto.Telefono,
+            RolAdminId = ocontacto.RolAdminId,
+            RolesDisponibles = ObtenerRolesParaSelect()
+        };
+
+        return View(viewModel);
     }
     [HttpPost]
-    public IActionResult Editar(Administrador ocontacto)
+    public IActionResult EditarAdministrador(EditarAdministradorViewModel model)
     {
         string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
-        var respuestas = _cruadm.Editar(ocontacto, connStr);
+        if (!ModelState.IsValid)
+        {
+            ViewBag.RolesDisponibles = ObtenerRolesParaSelect();
+            return View(model);
+        }
+        var ocontacto = new Administrador
+        {
+            idAdministrador = model.idAdministrador,
+            Nombre = model.Nombre,
+            Apellido = model.Apellido,
+            Correo = model.Correo,
+            Telefono = model.Telefono,
+            RolAdminId = model.RolAdminId
+        };
+        var respuestas = _crudadm.Editar(ocontacto, connStr);
         if (respuestas)
-            return RedirectToAction("Admadmin");
+            return RedirectToAction("Administradores");
         else
+        {
+            ViewBag.RolesDisponibles = ObtenerRolesParaSelect();
+            ModelState.AddModelError("", "Error al actualizar el administrador.");
             return View();
+        }
+
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Eliminar(Administrador administrador, string PasswordConfirm)
+    public IActionResult Eliminar(int idAdministrador, string PasswordConfirm)
     {
         string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
-        var respuesta = _cruadm.Eliminar(administrador, PasswordConfirm, connStr);
+        var respuesta = _crudadm.Eliminar(idAdministrador, PasswordConfirm, connStr);
 
-        if (respuesta.Contraseña == "Contraseña incorrecta.")
+        if (!respuesta.Exito)
         {
-            TempData["Error"] = "La contraseña ingresada es incorrecta";
-            return RedirectToAction("Empleados", "Administrador");
-
+            ModelState.AddModelError(string.Empty, respuesta.Mensaje);
+            return RedirectToAction("Administradores", "Administrador");
         }
-        return RedirectToAction("Empleados", "Administrador");
+        return RedirectToAction("Administradores", "Administrador");
     }
-    private void CargarRoles()
+    private List<SelectListItem> ObtenerRolesParaSelect()
     {
         string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
-        ViewBag.Roles = new SelectList(_cruadm.ObtenerRoles(connStr), "Id", "RolNombre");
+        var roles = _crudadm.ObtenerRoles(connStr);
+        return roles.Select(r => new SelectListItem
+        {
+            Value = r.Id.ToString(),
+            Text = r.RolNombre
+        }).ToList();
+    }
+
+    public IActionResult Clientes()
+    {
+        string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+        var listaClientes = _crudclientes.Tabla(connStr);
+        var viewModel = new TablaClientesViewModel
+        {
+            Usuarios = listaClientes
+        };
+        return View(viewModel);
+    }
+    [HttpGet]
+    public IActionResult CrearCliente()
+    {
+        return View();
+    }
+    [HttpPost]
+    public IActionResult CrearCliente(CrearClienteViewModel model)
+    {
+        string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+        var nuevoCliente = new Usuario
+        {
+            Nombre = model.Nombre,
+            Apellidos = model.Apellidos,
+            Correo = model.Correo,
+            Contraseña = model.Contraseña,
+            Telefono = model.Telefono
+        };
+        if (_crudclientes.ValidarExistenciaCliente(nuevoCliente, connStr))
+        {
+            ModelState.AddModelError("", "No se pudo crear al cliente. El cliente ya existe.");
+            return View(model);
+        }
+        var respuesta = _crudclientes.Guardar(nuevoCliente, connStr);
+        if (respuesta)
+            return RedirectToAction("Clientes");
+        else
+        {
+            ModelState.AddModelError("", "No se pudo guardar al cliente. Verifique los datos o intente más tarde.");
+            return View(model);
+        }
+    }
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [HttpGet]
+    public IActionResult EditarCliente(int id_usu)
+    {
+        string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+        var ocontacto = _crudclientes.ObtenerCliente(id_usu, connStr);
+        if (ocontacto == null)
+            return NotFound();
+
+        var viewModel = new EditarClienteViewModel
+        {
+            id_usu = ocontacto.id_usu,
+            Nombre = ocontacto.Nombre,
+            Apellidos = ocontacto.Apellidos,
+            Correo = ocontacto.Correo,
+            Telefono = ocontacto.Telefono,
+            Activo = ocontacto.Activo
+        };
+
+        return View(viewModel);
+    }
+    [HttpPost]
+    public IActionResult EditarCliente(EditarClienteViewModel model)
+    {
+        string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+        if (!ModelState.IsValid)
+        {
+            ViewBag.RolesDisponibles = ObtenerRolesParaSelect();
+            return View(model);
+        }
+        var ocontacto = new Usuario
+        {
+            id_usu = model.id_usu,
+            Nombre = model.Nombre,
+            Apellidos = model.Apellidos,
+            Correo = model.Correo,
+            Telefono = model.Telefono,
+            Activo = model.Activo
+        };
+        var respuestas = _crudclientes.EditarCliente(ocontacto, connStr);
+        if (respuestas)
+            return RedirectToAction("Clientes");
+        else
+        {
+            ModelState.AddModelError("", "Error al actualizar al cliente.");
+            return View();
+        }
+
     }
 }

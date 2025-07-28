@@ -1,29 +1,85 @@
+@inject IHttpContextAccessor HttpContextAccessor
   <link href="~/css/nav.css" rel="stylesheet">
 
-<!-- Header-->
-    <div class="navbar">
-      <a class="logo" title="WhaleSports" href="@Url.Action("Index","Home")">
-        <div class="logo">
-          <div class="logo-container">
-            <span class="logo-text">WhaleSports</span>
-            <img alt="Gymshark" data-locator-id="header-logo-select" src="~/css/Images/Logo_WS_btn.png" decoding="async" data-nimg="fixed" class="logo-img">
-          </div>
+  <!-- Header-->
+  <div class="navbar">
+    <a class="logo" title="WhaleSports" href="@Url.Action("Index","Home")">
+      <div class="logo">
+        <div class="logo-container">
+          <span class="logo-text">WhaleSports</span>
+          <img alt="Gymshark" data-locator-id="header-logo-select" src="~/css/Images/Logo_WS_btn.png" decoding="async" data-nimg="fixed" class="logo-img">
         </div>
-      </a>
-      <nav>
-        <a class="lng-generoM" href="#">Hombre</a>
-        <a class="lng-generoF" href="#">Mujer</a>
-        <a class="lng-accesorio" href="#">Accesorios</a>
-      </nav>
-      
-      <div class="icons">
-        <div class="search-bar">
-            <input class="lng-buscador" type="text" placeholder="Buscar producto...">
-            <button><i class="fas fa-search"></i></button>
-        </div>
-        <form asp-controller="Perfil" asp-action="Index" >
-          <a class="lng-miPerfil" href="@Url.Action("Index", "Perfil")"><i class="fa fa-user"></i></a>
-        </form>
+      </div>
+    </a>
+    <nav>
+      <a class="lng-generoM" href="#">Hombre</a>
+      <a class="lng-generoF" href="#">Mujer</a>
+      <a class="lng-accesorio" href="#">Accesorios</a>
+    </nav>
+    <div class="icons">
+      <div class="search-bar">
+        <input class="lng-buscador" type="text" placeholder="Buscar producto...">
+        <button><i class="fas fa-search"></i></button>
+      </div>
+        @{
+          var id_usu = HttpContextAccessor.HttpContext?.Session.GetString("id_usu");
+          var idAdministrador = HttpContextAccessor.HttpContext?.Session.GetString("idAdministrador");
+          var nombre = HttpContextAccessor.HttpContext?.Session.GetString("Nombre");
+        }
+        @if (!string.IsNullOrEmpty(idAdministrador))
+        {
+          <form asp-controller="Administrador" asp-action="Index" >
+            <a class="lng-miPerfil" href="@Url.Action("Index", "Administrador")"><i class="fa fa-user"></i></a>
+          </form>
+        }
+        else if(!string.IsNullOrEmpty(id_usu))
+        {
+          <form asp-controller="Perfil" asp-action="Index" >
+            <a class="lng-miPerfil" href="@Url.Action("Index", "Perfil")"><i class="fa fa-user"></i></a>
+          </form>
+        }
+        else
+        {
+          <a class="lng-cuenta" asp-controller="Home" asp-action="LogIn"><i class="fa fa-user"></i></a>
+        }
         <i class="fa fa-shopping-bag"></i>
       </div>
     </div>
+@if (!string.IsNullOrEmpty(id_usu) || !string.IsNullOrEmpty(idAdministrador))
+{
+    <div class="user-dropdown-container">
+        <div class="user-icon" onclick="toggleDropdown()">
+            <i class="fa fa-user"></i>
+        </div>
+        <div class="user-dropdown" id="userDropdown">
+            <p>@nombre</p>
+            @if (!string.IsNullOrEmpty(idAdministrador))
+            {
+                <a href="@Url.Action("Index", "Administrador")">Inicio administrador</a>
+            }
+            else
+            {
+                <a href="@Url.Action("Index", "Perfil")">Mi perfil</a>
+            }
+            <form asp-controller="Home" asp-action="CerrarSesion" method="post">
+                <button type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+}
+<script>
+    function toggleDropdown() {
+        var menu = document.getElementById("userDropdown");
+        menu.classList.toggle("show");
+    }
+
+    // Opcional: cierra el dropdown si haces clic fuera
+    document.addEventListener("click", function (event) {
+        var dropdown = document.getElementById("userDropdown");
+        var icon = document.querySelector(".user-icon");
+        if (!icon.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
+</script>
+    @* <script src="/js/dropdownPerfil"></script> *@

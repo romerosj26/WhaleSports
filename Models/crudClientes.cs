@@ -6,17 +6,17 @@ using Microsoft.Data.SqlClient;
 
 namespace WS_2_0.Models
 {
-    public class CRU
+    public class crudClientes
     {
         public List<Usuario> Tabla(string StringdeConexion)
         {
             var oTabla = new List<Usuario>();
-            using (SqlConnection conn = new SqlConnection(StringdeConexion))
+            using (SqlConnection connStr = new SqlConnection(StringdeConexion))
             {
-                using (SqlCommand cmd = new SqlCommand("TUsua", conn))
+                using (SqlCommand cmd = new SqlCommand("MostrarCliente", connStr))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    conn.Open();
+                    connStr.Open();
 
                     var dr = cmd.ExecuteReader();
                     while (dr.Read())
@@ -28,21 +28,24 @@ namespace WS_2_0.Models
                             Apellidos = dr["Apellidos"].ToString(),
                             Correo = dr["Correo"].ToString(),
                             Telefono = dr["Telefono"].ToString(),
-                            Contraseña = dr["Contraseña"].ToString(),
+                            Fecha_Reg = (DateTime)dr["Fecha_Reg"],
+                            Contraseña = dr["PasswordHash"].ToString(),
+                            EmailConfirmed = (bool)dr["EmailConfirmed"],
+                            Activo = (bool)dr["Activo"]
                         });
                     }
                 }
                 return oTabla;
             }
         }
-        public Usuario Obtener(int id_usua, string StringdeConexion)
+        public Usuario Obtener(int id_usu, string StringdeConexion)
         {
             var oContacto = new Usuario();
             using (SqlConnection conn = new SqlConnection(StringdeConexion))
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("TObtener", conn);
-                cmd.Parameters.AddWithValue("@id_usu", id_usua);
+                cmd.Parameters.AddWithValue("@id_usu", id_usu);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using (var dr = cmd.ExecuteReader())
@@ -62,21 +65,38 @@ namespace WS_2_0.Models
             }
             return oContacto;
         }
+        public bool ValidarExistenciaCliente(Usuario usuario, string StringdeConexion)
+        {
+            using (SqlConnection connStr = new SqlConnection(StringdeConexion))
+            {
+                connStr.Open();
+                var cmd = new SqlCommand("SELECT COUNT(*) FROM Usuario WHERE Correo = @Correo", connStr);
+                cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
         public bool Guardar(Usuario ocontacto, string StringdeConexion)
         {
             bool rpta;
+            byte[] salt = PasswordHasher.GenerateSalt();
+            byte[] hash = PasswordHasher.HashPassword(ocontacto.Contraseña, salt);
+
             try
             {
-                using (SqlConnection conn = new SqlConnection(StringdeConexion))
+                using (SqlConnection connStr = new SqlConnection(StringdeConexion))
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("TGuardar", conn);
+                    connStr.Open();
+                    SqlCommand cmd = new SqlCommand("GuardarCliente", connStr);
+                    ocontacto.Fecha_Reg = DateTime.Now;
                     cmd.Parameters.AddWithValue("Nombre", ocontacto.Nombre);
                     cmd.Parameters.AddWithValue("Apellidos", ocontacto.Apellidos);
                     cmd.Parameters.AddWithValue("Correo", ocontacto.Correo);
                     cmd.Parameters.AddWithValue("Telefono", ocontacto.Telefono);
-                    cmd.Parameters.AddWithValue("Contraseña", ocontacto.Contraseña);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Fecha_Reg", ocontacto.Fecha_Reg);
+                    cmd.Parameters.Add("@PasswordHash", SqlDbType.VarBinary, hash.Length).Value = hash;
+                    cmd.Parameters.Add("@PasswordSalt", SqlDbType.VarBinary, salt.Length).Value = salt;
+                    cmd.CommandType = CommandType.StoredProcedure; cmd.CommandType = CommandType.StoredProcedure;
                     cmd.ExecuteNonQuery();
                 }
                 rpta = true;
@@ -195,14 +215,14 @@ namespace WS_2_0.Models
                     Ccmd.CommandType = CommandType.Text;
 
                     var contraseñaAntigua = Ccmd.ExecuteScalar()?.ToString();
-                    
+
                     // Aquí puedes actualizar la contraseña del usuario en la base de datos
                     using SqlCommand updatecmd = new SqlCommand("ActualizarContraseña", conn, tran);
                     updatecmd.CommandType = CommandType.StoredProcedure;
                     updatecmd.Parameters.AddWithValue("@Contraseña", ocontacto.Contraseña);
                     updatecmd.Parameters.AddWithValue("@newcontraseña", ocontacto.newContraseña); // En texto plano, será cifrada en SQL
                     updatecmd.Parameters.AddWithValue("@id_usu", ocontacto.id_usu);
-                    
+
                     if (contraseñaAntigua == ocontacto.Contraseña)
                     {
                         updatecmd.ExecuteNonQuery();
@@ -241,7 +261,7 @@ namespace WS_2_0.Models
             }
             return rpta;
         }
-        public bool cambioFotoPerfil(int id_usu, byte[] fotoPerfil,string extension, string StringdeConexion)
+        public bool cambioFotoPerfil(int id_usu, byte[] fotoPerfil, string extension, string StringdeConexion)
         {
             using (SqlConnection conn = new SqlConnection(StringdeConexion))
             {
@@ -258,6 +278,57 @@ namespace WS_2_0.Models
                 }
             }
         }
-    
+        public Usuario ObtenerCliente(int id_usu, string StringdeConexion)
+        {
+            var oContacto = new Usuario();
+            using (SqlConnection connStr = new SqlConnection(StringdeConexion))
+            {
+                connStr.Open();
+                SqlCommand cmd = new SqlCommand("ObtenerCliente", connStr);
+                cmd.Parameters.AddWithValue("@id_usu", id_usu);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using (var dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        oContacto.id_usu = Convert.ToInt32(dr["id_usu"]);
+                        oContacto.Nombre = dr["Nombre"].ToString();
+                        oContacto.Apellidos = dr["Apellidos"].ToString();
+                        oContacto.Correo = dr["Correo"].ToString();
+                        oContacto.Telefono = dr["Telefono"].ToString();
+                        oContacto.Activo = (bool)dr["Activo"];
+                    }
+                }
+            }
+            return oContacto;
+        }
+        public bool EditarCliente(Usuario oContacto, string StringdeConexion)
+        {
+            bool rptas;
+            try
+            {
+                using (SqlConnection connStr = new SqlConnection(StringdeConexion))
+                {
+                    connStr.Open();
+                    SqlCommand cmd = new SqlCommand("EditarCliente", connStr);
+                    cmd.Parameters.AddWithValue("id_usu", oContacto.id_usu);
+                    cmd.Parameters.AddWithValue("Nombre", oContacto.Nombre);
+                    cmd.Parameters.AddWithValue("Apellidos", oContacto.Apellidos);
+                    cmd.Parameters.AddWithValue("Telefono", oContacto.Telefono);
+                    cmd.Parameters.AddWithValue("Correo", oContacto.Correo);
+                    cmd.Parameters.AddWithValue("@Activo", oContacto.Activo);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.ExecuteNonQuery();
+                }
+                rptas = true;
+            }
+            catch (SqlException ex)
+            {
+                string error = ex.Message;
+                rptas = false;
+            }
+            return rptas;
+        }
     }
 }

@@ -1,0 +1,49 @@
+@model WS_2_0.Models.ViewModels.EditarClienteViewModel
+@{
+    ViewData["Title"] = "EditarCliente | WhaleSports";
+}
+
+<div class="card">
+    <div class="card-header">
+        Editar Cliente
+    </div>
+    <div class="card-body">
+
+        <form asp-action="EditarCliente" asp-controller="Administrador" method="post">
+            <input asp-for="id_usu" type="hidden" class="form-control">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">Nombre</label>
+                        <input asp-for="Nombre" type="text" class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputPassword4">Apellidos</label>
+                        <input asp-for="Apellidos" type="text" class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">Correo</label>
+                        <input asp-for="Correo" type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputCity">Telefono</label>
+                        <input asp-for="Telefono" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Activo" class="control-label"></label>
+                    @Html.DropDownListFor(model => model.Activo,
+            new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Activo", Value = "true", Selected = Model.Activo },
+                new SelectListItem { Text = "Inactivo", Value = "false", Selected = !Model.Activo }
+            },
+            htmlAttributes: new { @class = "form-control" })
+            <span asp-validation-for="Activo" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Confirmar</button>
+                <a asp-action="Clientes" asp-controller="Administrador" class="btn btn-danger">Cancelar</a>
+        </form>
+    </div>
+</div>

@@ -1,14 +1,14 @@
-@model WS_2_0.Models.CrearAdministradorViewModel
+@model WS_2_0.Models.ViewModels.CrearClienteViewModel
 @{
-    ViewData["Title"] = "CrearAdministrador";
+    ViewData["Title"] = "CrearCliente";
 }
 <div class="card">
     <div class="card-header">
-        Crear Administrador
+        Crear Cliente
     </div>
     <div class="card-body">
 
-        <form asp-action="CrearAdministrador" asp-controller="Administrador" method="post">
+        <form asp-action="CrearCliente" asp-controller="Administrador" method="post">
              @Html.AntiForgeryToken()
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -18,8 +18,8 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword4">Apellido</label>
-                        <input asp-for="Apellido" type="text" class="form-control">
-                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                        <input asp-for="Apellidos" type="text" class="form-control">
+                        <span asp-validation-for="Apellidos" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Correo</label>
@@ -38,15 +38,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="RolAdminId" class="control-label"></label>
-                    <select asp-for="RolAdminId" class="form-control" asp-items="Model.RolesDisponibles">
-
-                        <option value="">Seleccione un rol</option>
-                    </select>
-                    <span asp-validation-for="RolAdminId" class="text-danger"></span>
+                    
                 </div>
                 <button type="submit" class="btn btn-primary">Crear</button>
-                <a asp-action="Administradores" asp-controller="Administrador" class="btn btn-danger">Cancelar</a>
+                <a asp-action="Clientes" asp-controller="Administrador" class="btn btn-danger">Cancelar</a>
         </form>
     @if (!ViewData.ModelState.IsValid)
 {

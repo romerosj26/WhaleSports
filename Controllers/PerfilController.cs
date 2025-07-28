@@ -21,7 +21,7 @@ namespace WS_2_0.Controllers
             _emailSettings = emailOptions.Value;
             _emailService = emailService;
         }
-        CRU _cru = new CRU();
+        crudClientes _cru = new crudClientes();
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Index()
         {

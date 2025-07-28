@@ -3,7 +3,7 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
 using Microsoft.Extensions.Options;
-using WS_2_0; // Asegúrate de usar el namespace correcto de tu proyecto
+using WS_2_0;
 
 namespace WS_2_0.Services
 {

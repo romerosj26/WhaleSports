@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using WS_2_0.Models.ViewModels;
 using System;
 
 namespace WS_2_0.Models
 {
-    public class cruAdministrador
+    public class crudAdministrador
     {
         public List<Administrador> Tabla(string StringdeConexion)
         {
@@ -84,6 +85,7 @@ namespace WS_2_0.Models
             bool rpta;
             byte[] salt = PasswordHasher.GenerateSalt();
             byte[] hash = PasswordHasher.HashPassword(ocontacto.Contraseña, salt);
+
             try
             {
                 using (SqlConnection connStr = new SqlConnection(StringdeConexion))
@@ -111,7 +113,7 @@ namespace WS_2_0.Models
             }
             return rpta;
         }
-        public bool Editar(Administrador ocontac, string StringdeConexion)
+        public bool Editar(Administrador ocontacto, string StringdeConexion)
         {
             bool rptas;
             try
@@ -119,19 +121,19 @@ namespace WS_2_0.Models
                 using (SqlConnection connStr = new SqlConnection(StringdeConexion))
                 {
                     connStr.Open();
-                    SqlCommand cmd = new SqlCommand("AdmEditar", connStr);
-                    cmd.Parameters.AddWithValue("id_adm", ocontac.idAdministrador);
-                    cmd.Parameters.AddWithValue("Nombre", ocontac.Nombre);
-                    cmd.Parameters.AddWithValue("Apellidos", ocontac.Apellido);
-                    cmd.Parameters.AddWithValue("Telefono", ocontac.Telefono);
-                    cmd.Parameters.AddWithValue("Correo", ocontac.Correo);
-                    cmd.Parameters.AddWithValue("Contraseña", ocontac.Contraseña);
+                    SqlCommand cmd = new SqlCommand("EditarAdministrador", connStr);
+                    cmd.Parameters.AddWithValue("idAdministrador", ocontacto.idAdministrador);
+                    cmd.Parameters.AddWithValue("Nombre", ocontacto.Nombre);
+                    cmd.Parameters.AddWithValue("Apellido", ocontacto.Apellido);
+                    cmd.Parameters.AddWithValue("Telefono", ocontacto.Telefono);
+                    cmd.Parameters.AddWithValue("Correo", ocontacto.Correo);
+                    cmd.Parameters.AddWithValue("@RolAdminId", ocontacto.RolAdminId);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.ExecuteNonQuery();
                 }
                 rptas = true;
             }
-            catch (Exception ex)
+            catch (SqlException  ex)
             {
                 string error = ex.Message;
                 rptas = false;
@@ -139,43 +141,63 @@ namespace WS_2_0.Models
 
             return rptas;
         }
-        public Administrador Eliminar(Administrador administrador, string PasswordConfirm, string StringdeConexion)
+        public ResultadoEliminacion Eliminar(int idAdministrador, string PasswordConfirm, string StringdeConexion)
         {
             byte[] hash = null, salt = null;
-            bool contraseñaCorrecta = false;
-            using (var conn = new SqlConnection(StringdeConexion))
-            {
-                conn.Open();
-                var cmd = new SqlCommand("SELECT ContrasenaHash, ContrasenaSalt FROM Administradores WHERE idAdministrador = @idAdministrador", conn);
-                cmd.Parameters.AddWithValue("@idAdministrador", administrador.idAdministrador);
-                using var reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    if (reader["ContrasenaHash"] == DBNull.Value || reader["ContrasenaSalt"] == DBNull.Value)
-                    {
-                        hash = (byte[])reader["ContrasenaHash"];
-                        salt = (byte[])reader["ContrasenaSalt"];
 
-                        contraseñaCorrecta = PasswordHasher.VerificarContraseña(PasswordConfirm, hash, salt);
-                    }
-                }
-            }
-            if (contraseñaCorrecta)
+            // Obtener hash y salt del administrador supremo //
+            using (var connStr = new SqlConnection(StringdeConexion))
             {
-                using (SqlConnection conn = new SqlConnection(StringdeConexion))
+                connStr.Open();
+                var cmd = new SqlCommand("SELECT ContrasenaHash, ContrasenaSalt FROM Administradores WHERE RolAdminId = 1", connStr);
+                using var reader = cmd.ExecuteReader();
+
+                if (!reader.Read())
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("EliminarAdministrador", conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@idAdministrador", administrador.idAdministrador);
-                    cmd.ExecuteNonQuery();
+                    return new ResultadoEliminacion
+                    {
+                        Exito = false,
+                        Mensaje = "No se encontró el administrador supremo."
+                    };
                 }
+                if (reader.IsDBNull(0) || reader.IsDBNull(1))
+                {
+                    return new ResultadoEliminacion
+                    {
+                        Exito = false,
+                        Mensaje = "El administrador supremo no tiene contraseña registrada."
+                    };
+                }
+                hash = (byte[])reader["ContrasenaHash"];
+                salt = (byte[])reader["ContrasenaSalt"];
             }
-            else
+
+            // Verificar la contraseña //
+            bool contraseñaCorrecta = PasswordHasher.VerificarContraseña(PasswordConfirm, hash, salt);
+
+            if (!contraseñaCorrecta)
             {
-                administrador.Contraseña = "Contraseña incorrecta.";
+                return new ResultadoEliminacion
+                {
+                    Exito = false,
+                    Mensaje = "Contraseña incorrecta. No se puede eliminar el administrador."
+                };
             }
-            return administrador;
+            
+            // Eliminación de administrador //
+            using (SqlConnection connStr = new SqlConnection(StringdeConexion))
+            {
+                connStr.Open();
+                SqlCommand cmd = new SqlCommand("EliminarAdministrador", connStr);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@idAdministrador", idAdministrador);
+                cmd.ExecuteNonQuery();
+            }
+            return new ResultadoEliminacion
+            {
+                Exito = true,
+                Mensaje = "Administrador eliminado correctamente."
+            };
         }
         public List<RolAdmin> ObtenerRoles(string connectionString)
         {

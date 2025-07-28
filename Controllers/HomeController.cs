@@ -24,6 +24,8 @@ namespace WS_2_0.Controllers
             _emailService = emailService;
         }
         LogInUsuario _log = new LogInUsuario();
+        LogInAdministrador _logAdmin = new LogInAdministrador();
+        crudAdministrador _crudadm = new crudAdministrador();
         public IActionResult Index()
         {
             return View();
@@ -135,7 +137,8 @@ namespace WS_2_0.Controllers
             string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
             var usuarioValido = LogInUsuario.Ingresar(usuario, connStr);
             var usuarios = _log.Obtener(usuario, connStr);
-            LogInAdministrador.Entrar(usuario, connStr);
+            var administradorValido = LogInAdministrador.Entrar(usuario, connStr);
+            var administradores = _crudadm.Obtener(usuario.idAdministrador, connStr);
 
             if (usuario.id_usu != 0)
             {
@@ -152,6 +155,8 @@ namespace WS_2_0.Controllers
             }
             else if (usuario.idAdministrador != 0)
             {
+                HttpContext.Session.SetInt32("idAdministrador", administradorValido.idAdministrador);
+                HttpContext.Session.SetString("Nombre", administradores.Nombre);
                 return RedirectToAction("Index", "Administrador");
             }
             ViewBag.Validacion = "Correo y/o Contraseña incorrecto";

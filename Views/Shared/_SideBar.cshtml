@@ -1,0 +1,37 @@
+@inject IHttpContextAccessor HttpContextAccessor
+
+<link href="~/css/administrador.css" rel="stylesheet">
+
+<div class="sidebar">
+    <a asp-controller="Administrador" asp-action="Index"><i class="bi bi-caret-left-fill"></i></i></a>
+    <a class="logo" title="WhaleSports" href="@Url.Action("Index","Home")">
+        <span class="logo-container">
+          <img alt="Gymshark" data-locator-id="header-logo-select" src="~/css/Images/Logo_WS_btn_Blanco.png" decoding="async" data-nimg="fixed" class="logo-img">
+          <span class="logo-text">WhaleSports</span>
+        </span>
+    </a>
+    <div class="topbar">
+        <ul class="topbar-list">
+            <li style="position: relative;">
+                <div class="custom-dropdown usuario" data-key="usuariosDropdown">
+                    <div class="dropdown-selected">Usuarios</div>
+                    <span class="arrow">&#9662;</span>
+                    <div class="dropdown-menu">
+                        <a href="@Url.Action("Administradores", "Administrador")">Empleados</a>
+                        <a href="@Url.Action("Clientes", "Administrador")">Clientes</a>
+                    </div>
+                </div>
+            </li>
+            
+            <li>Productos</li>
+            <li>Pedidos</li>
+            <li>Reportes/Estadisticas</li>
+        </ul>
+    </div>
+</div>
+        <form asp-action="LogOut" asp-controller="Perfil" method="post">
+            <button type="submit" class="btn-cerrar-sesion">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </form>       
+</div>

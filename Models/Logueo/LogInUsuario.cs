@@ -125,5 +125,26 @@ namespace WS_2_0.Models.Logueo
             }
             return usuario;
         }
+        public Usuario ObtenerIdAdministrador(Usuario usuario, string StringdeConexion)
+        {
+            var oContacto = new Usuario();
+            using (SqlConnection conn = new SqlConnection(StringdeConexion)) //Conexion a la Base de Datos//
+            {
+                conn.Open(); //Abre la Base de Datos//
+                SqlCommand cmd = new SqlCommand("SELECT idAdministrador, Nombre FROM Administradores WHERE @idAdministrador = idAdministrador", conn); //Manda a llamar al procedimiento almacenado de ObtenerID//
+                cmd.Parameters.AddWithValue("@idAdministrador", usuario.idAdministrador);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                using (var dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        //Guarda los datos obtenidos dentro de una variable//
+                        oContacto.idAdministrador = Convert.ToInt32(dr["idAdministrador"]);
+                        oContacto.Nombre = dr["Nombre"].ToString();
+                    }
+                }
+            }
+            return oContacto;
+        }
     }
 }

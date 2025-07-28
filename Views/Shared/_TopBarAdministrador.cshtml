@@ -1,0 +1,43 @@
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<link href="~/css/topbar.css" rel="stylesheet">
+<body>
+    <div class="topbarP">
+        <ul class="topbarP-list">
+            @{
+                var nombre = HttpContextAccessor.HttpContext?.Session.GetString("Nombre");
+            }
+            @if (!string.IsNullOrEmpty(nombre))
+            {
+                <li><span class="lng-title">Hola, </span><span>@nombre</span></li>
+            }
+            else
+            {
+                <li><a class="lng-cuenta" asp-controller="Home" asp-action="LogIn">Cuenta</a></li>
+            }
+            <li><a class="lng-ayuda" href="#">Ayuda</a></li>
+            <li>
+                <div class="langs">
+                    <div class="langs-selected-lang">
+                        <img id="lang-flag" src="https://flagsapi.com/MX/flat/32.png" alt="Bandera" width="25"/>
+                        <span id="lang-label">Español</span>
+                        <span class="arrow">&#9662;</span> <!-- Flecha ▼ -->
+                    </div>
+                    <ul class="langs-dropdown">
+                        <li>
+                            <a href="#" data-lang="english" data-flag="https://flagsapi.com/US/flat/32.png" class="active us">English</a>
+                        </li>
+                        <li>
+                            <a href="#" data-lang="espanol" data-flag="https://flagsapi.com/MX/flat/32.png" class="mx">Español</a>
+                        </li>
+                        <li>
+                            <a href="#" data-lang="汉语" data-flag="https://flagsapi.com/CN/flat/32.png" class="cn">汉语</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <script src="/js/idioma.js"></script>
+</body>
