@@ -22,6 +22,11 @@ public class AdministradorController : Controller
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Index()
     {
+        int? id = HttpContext.Session.GetInt32("idAdministrador");
+        if (id == null)
+        {
+            return RedirectToAction("LogIn", "Home");
+        }
         return View();
     }
 
@@ -42,6 +47,11 @@ public class AdministradorController : Controller
     [HttpGet]
     public IActionResult CrearAdministrador()
     {
+        int? id = HttpContext.Session.GetInt32("idAdministrador");
+        if (id == null)
+        {
+            return RedirectToAction("LogIn", "Home");
+        }
         var viewModel = new CrearAdministradorViewModel
         {
             RolesDisponibles = ObtenerRolesParaSelect()
@@ -250,6 +260,20 @@ public class AdministradorController : Controller
             ModelState.AddModelError("", "Error al actualizar al cliente.");
             return View();
         }
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult EliminarCliente(int id_usu, string PasswordConfirm)
+    {
+        string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+        var respuesta = _crudclientes.EliminarCliente(id_usu, PasswordConfirm, connStr);
 
+        if (!respuesta.Exito)
+        {
+            ModelState.AddModelError(string.Empty, respuesta.Mensaje);
+            return RedirectToAction("Clientes", "Administrador");
+        }
+        ModelState.AddModelError(string.Empty, respuesta.Mensaje);
+        return RedirectToAction("Clientes", "Administrador");
     }
 }

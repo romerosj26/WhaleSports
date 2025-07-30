@@ -1,0 +1,85 @@
+@model WS_2_0.Models.CrearProductoViewModel
+
+<div class="card">
+    <div class="card-header">
+        Crear Producto
+    </div>
+    <div class="card-body">
+
+        <form asp-action="CrearProducto" asp-controller="Administrador" method="post">
+             @Html.AntiForgeryToken()
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">Nombre</label>
+                        <input asp-for="Nombre" type="text" class="form-control">
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputPassword4">Descripcion</label>
+                        <input asp-for="Descripcion" type="text" class="form-control">
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">Precio</label>
+                        <input asp-for="Precio" class="form-control" id="inputEmail4">
+                        <span asp-validation-for="Precio" class="text-danger"></span>
+                    </div>
+                    <label for="fileInput" class="change-photo-btn">
+                        <i class="fa fa-camera"></i> Cambiar foto
+                    </label>
+                    <input asp-for="ImagenUrl" type="file" name="ImagenUrl" id="fileInput" accept="image/*" onchange="previewAndSubmit()" hidden />
+                    <script>
+                        function previewAndSubmit() {
+                            const input = document.getElementById('fileInput');
+                            if (input.files.length > 0) {
+                                input.form.submit(); // envía el formulario automáticamente
+                            }
+                        }
+                    </script>
+                    <div class="form-group col-md-6">
+                        <label for="inputPassword4">Stock</label>
+                        <input asp-for="Stock" type="password" class="form-control" id="inputPassword4" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputCity">Telefono</label>
+                        <input asp-for="Categoria" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Activo" class="control-label"></label>
+                    @Html.DropDownListFor(model => model.Activo,
+                    new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Activo", Value = "true", Selected = Model.Activo },
+                        new SelectListItem { Text = "Inactivo", Value = "false", Selected = !Model.Activo }
+                    },
+                    htmlAttributes: new { @class = "form-control" })
+                    <span asp-validation-for="Activo" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a asp-action="Administradores" asp-controller="Administrador" class="btn btn-danger">Cancelar</a>
+        </form>
+    @if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+        @foreach (var modelState in ViewData.ModelState)
+        {
+            foreach (var error in modelState.Value.Errors)
+            {
+                <li>@modelState.Key: @error.ErrorMessage</li>
+            }
+        }
+        </ul>
+    </div>
+}
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+}

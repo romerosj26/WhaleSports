@@ -6,15 +6,15 @@ using Microsoft.Data.SqlClient;
 
 namespace WS_2_0.Models
 {
-    public class cruProductos
+    public class crudProductos
     {
-        public List<Producto> ObtenerProductos(string conexion)
+        public List<Producto> Tabla(string conexion)
         {
             List<Producto> productos = new List<Producto>();
             using (SqlConnection conn = new SqlConnection(conexion))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Productos WHERE Activo = 1", conn);
+                SqlCommand cmd = new SqlCommand("MostrarProducto", conn);
                 using (var dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
@@ -26,6 +26,8 @@ namespace WS_2_0.Models
                             Descripcion = dr["Descripcion"].ToString(),
                             Precio = (decimal)dr["Precio"],
                             ImagenUrl = dr["Imagen"].ToString(),
+                            Stock = (int)dr["Stock"],
+                            Activo = (bool)dr["Activo"],
                             Categoria = dr["Categoria"].ToString()
                         });
                     }

@@ -4,7 +4,7 @@ using WS_2_0.Models;
 public class ProductosController : Controller
 {
     private readonly IConfiguration _config;
-    private readonly cruProductos _cruproducto = new cruProductos();
+    private readonly crudProductos _crudproducto = new crudProductos();
 
     public ProductosController(IConfiguration config)
     {
@@ -13,8 +13,8 @@ public class ProductosController : Controller
 
     public IActionResult Index(string busqueda = "")
     {
-        string conexion = _config.GetConnectionString("StringCONSQLlocal");
-        var productos = _cruproducto.ObtenerProductos(conexion);
+        string connStr = _config.GetConnectionString("StringCONSQLlocal");
+        var productos = _crudproducto.Tabla(connStr);
 
         if (!string.IsNullOrEmpty(busqueda))
         {
@@ -22,7 +22,11 @@ public class ProductosController : Controller
             .Where(p => p.Nombre.Contains(busqueda, StringComparison.OrdinalIgnoreCase))
             .ToList();
         }
-
         return View(productos);
+    }
+    [HttpGet]
+    public IActionResult CrearProducto()
+    {
+        return View();
     }
 }

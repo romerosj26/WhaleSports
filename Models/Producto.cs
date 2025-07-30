@@ -2,8 +2,6 @@ using System;
 using System.ComponentModel.DataAnnotations;
 namespace WS_2_0.Models
 {
-
-
     public class Producto
     {
         public int Id { get; set; }

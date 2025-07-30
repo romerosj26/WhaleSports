@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using WS_2_0.Models;
-using WS_2_0.Models.Perfil;
+using WS_2_0.Models.ViewModels;
 using Microsoft.Extensions.Options;
 using WS_2_0.Services;
 using System.Data;
-
 
 namespace WS_2_0.Controllers
 {
@@ -203,7 +202,7 @@ namespace WS_2_0.Controllers
             using SqlCommand cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@id_usu",id.Value);
 
-            using SqlDataReader reader = cmd.ExecuteReader();                 //la variable reader ejecuta el comando para leer los datos obtenidos del procedimiento almacenado Val//
+            using SqlDataReader reader = cmd.ExecuteReader();  //la variable reader ejecuta el comando para leer los datos obtenidos del procedimiento almacenado Val//
             if (!reader.Read())
             {
                 ModelState.AddModelError("", "Usuario no encontrado");

@@ -7,17 +7,6 @@ namespace WS_2_0.Models.ViewModels
     public class TablaClientesViewModel
     {
         public List<Usuario> Usuarios { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
-        public DateTime Fecha_Reg { get; set; }
-        public bool EmailConfirmed { get; set; } = false;
-
-        [Required(ErrorMessage = "Campo requerido")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$",
-         ErrorMessage = "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.")]
-        public string Contraseña { get; set; }
-        public bool Activo { get; set; }
-
     }
     public class CrearClienteViewModel
     {
@@ -55,5 +44,16 @@ namespace WS_2_0.Models.ViewModels
         public string Telefono { get; set; }
 
         public bool Activo { get; set; }
+    }
+    public class EditarContraseñaViewModel
+    {
+        public string ContraseñaActual { get; set; }
+        public string NuevaContraseña { get; set; }
+        public string ConfirmarContraseña { get; set; }
+    }
+    public class ResultadoEliminacion
+    {
+        public bool Exito { get; set; }
+        public string Mensaje { get; set; }
     }
 }

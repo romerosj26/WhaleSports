@@ -53,16 +53,40 @@ function initCustomDropdowns() {
 
 document.addEventListener('DOMContentLoaded', initCustomDropdowns);
 
+// Dropdown Perfil//
+function toggleDropdown() {
+        var menu = document.getElementById("userDropdown");
+        menu.classList.toggle("show");
+    }
+
+    document.addEventListener("click", function (event) {
+        var dropdown = document.getElementById("userDropdown");
+        var icon = document.querySelector(".user-icon");
+        if (!icon.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
+
 // Show-Hide Modals //
-let adminAEliminarId = null; 
+let adminAEliminarId = null;
+let clienteEliminarId = null;
 
     document.addEventListener("DOMContentLoaded", function(){
         window.mostrarModal = function(id){
             adminAEliminarId = id;
+            clienteEliminarId = id;
             document.getElementById("modalDelete").style.display = "flex";
         }
         window.mostrarModal2 = function(){
-        document.getElementById("idAdministradorEliminarConfirm").value = adminAEliminarId;
+          const adminField = document.getElementById("idAdministradorEliminarConfirm");
+          const clienteField = document.getElementById("id_usuEliminarConfirm");
+
+          if(adminField){
+            adminField.value = adminAEliminarId;
+          }
+          if(clienteField){
+            clienteField.value = clienteEliminarId;
+          }
         document.getElementById("modalConfirmarEliminacion").style.display = "flex";
         }
     })

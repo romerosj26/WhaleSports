@@ -199,67 +199,128 @@ namespace WS_2_0.Models
 
             return rpta;
         }
-        public bool EditarContraseña(Usuario ocontacto, string StringdeConexion)
+        // public bool EditarContraseña(Usuario ocontacto, string StringdeConexion)
+        // {
+        //     bool rpta;
+        //     try
+        //     {
+        //         using (SqlConnection connStr = new SqlConnection(StringdeConexion))
+        //         {
+        //             connStr.Open();
+        //             using var tran = connStr.BeginTransaction();
+
+        //             string query = @"
+        //             SELECT 
+		//                 PasswordHash,
+		//                 PasswordSalt
+	    //             FROM Usuario 
+	    //             WHERE id_usu = @id_usu
+	    //             AND Activo = 1";
+        //             using SqlCommand cmd = new SqlCommand(query, connStr);
+        //             cmd.Parameters.AddWithValue("@id_usu", ocontacto.id_usu);
+
+        //             using SqlDataReader reader = cmd.ExecuteReader();
+        //             if (!reader.Read())
+        //             {
+                        
+        //             }
+
+        //             byte[] hashActual = (byte[])reader["PasswordHash"];
+        //             byte[] saltActual = (byte[])reader["PasswordSalt"];
+
+        //             if (!PasswordHasher.VerificarContraseña(model.ContraseñaActual, hashActual, saltActual))
+        //             {
+        //                 ModelState.AddModelError("ContraseñaActual", "La contraseña actual es incorrecta.");
+        //                 return RedirectToAction("Index", "Perfil");
+        //             }
+
+        //             string queryContraseña = "SELECT Contraseña FROM Usuario WHERE id_usu = @id_usu";
+        //             SqlCommand Ccmd = new SqlCommand(queryContraseña, connStr, tran);
+        //             Ccmd.Parameters.AddWithValue("@id_usu", ocontacto.id_usu);
+        //             Ccmd.CommandType = CommandType.Text;
+
+        //             var contraseñaAntigua = Ccmd.ExecuteScalar()?.ToString();
+
+        //             // Aquí puedes actualizar la contraseña del usuario en la base de datos
+        //             using SqlCommand updatecmd = new SqlCommand("ActualizarContraseña", connStr, tran);
+        //             updatecmd.CommandType = CommandType.StoredProcedure;
+        //             updatecmd.Parameters.AddWithValue("@Contraseña", ocontacto.Contraseña);
+        //             updatecmd.Parameters.AddWithValue("@newcontraseña", ocontacto.newContraseña); // En texto plano, será cifrada en SQL
+        //             updatecmd.Parameters.AddWithValue("@id_usu", ocontacto.id_usu);
+
+        //             if (contraseñaAntigua == ocontacto.Contraseña)
+        //             {
+        //                 updatecmd.ExecuteNonQuery();
+        //             }
+
+        //             tran.Commit();
+        //         }
+        //         rpta = true;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         string error = ex.Message;
+        //         rpta = false;
+        //     }
+        //     return rpta;
+        // }
+        public ResultadoEliminacion EliminarCliente(int id_usua, string PasswordConfirm, string StringdeConexion)
         {
-            bool rpta;
-            try
+            byte[] hash = null, salt = null;
+
+            // Obtener hash y salt del administrador supremo //
+            using (var connStr = new SqlConnection(StringdeConexion))
             {
-                using (SqlConnection conn = new SqlConnection(StringdeConexion))
+                connStr.Open();
+                var cmd = new SqlCommand("SELECT ContrasenaHash, ContrasenaSalt FROM Administradores WHERE RolAdminId = 1", connStr);
+                using var reader = cmd.ExecuteReader();
+
+                if (!reader.Read())
                 {
-                    conn.Open();
-                    using var tran = conn.BeginTransaction();
-
-                    string queryContraseña = "SELECT Contraseña FROM Usuario WHERE id_usu = @id_usu";
-                    SqlCommand Ccmd = new SqlCommand(queryContraseña, conn, tran);
-                    Ccmd.Parameters.AddWithValue("@id_usu", ocontacto.id_usu);
-                    Ccmd.CommandType = CommandType.Text;
-
-                    var contraseñaAntigua = Ccmd.ExecuteScalar()?.ToString();
-
-                    // Aquí puedes actualizar la contraseña del usuario en la base de datos
-                    using SqlCommand updatecmd = new SqlCommand("ActualizarContraseña", conn, tran);
-                    updatecmd.CommandType = CommandType.StoredProcedure;
-                    updatecmd.Parameters.AddWithValue("@Contraseña", ocontacto.Contraseña);
-                    updatecmd.Parameters.AddWithValue("@newcontraseña", ocontacto.newContraseña); // En texto plano, será cifrada en SQL
-                    updatecmd.Parameters.AddWithValue("@id_usu", ocontacto.id_usu);
-
-                    if (contraseñaAntigua == ocontacto.Contraseña)
+                    return new ResultadoEliminacion
                     {
-                        updatecmd.ExecuteNonQuery();
-                    }
-
-                    tran.Commit();
+                        Exito = false,
+                        Mensaje = "No se encontró el administrador supremo."
+                    };
                 }
-                rpta = true;
-            }
-            catch (Exception ex)
-            {
-                string error = ex.Message;
-                rpta = false;
-            }
-            return rpta;
-        }
-        public bool Eliminar(int id_usua, string StringdeConexion)
-        {
-            bool rpta;
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(StringdeConexion))
+                if (reader.IsDBNull(0) || reader.IsDBNull(1))
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("TEliUsu", conn);
-                    cmd.Parameters.AddWithValue("id_usu", id_usua);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.ExecuteNonQuery();
+                    return new ResultadoEliminacion
+                    {
+                        Exito = false,
+                        Mensaje = "El administrador supremo no tiene contraseña registrada."
+                    };
                 }
-                rpta = true;
+                hash = (byte[])reader["ContrasenaHash"];
+                salt = (byte[])reader["ContrasenaSalt"];
             }
-            catch (Exception ex)
+
+            // Verificar la contraseña //
+            bool contraseñaCorrecta = PasswordHasher.VerificarContraseña(PasswordConfirm, hash, salt);
+
+            if (!contraseñaCorrecta)
             {
-                string error = ex.Message;
-                rpta = false;
+                return new ResultadoEliminacion
+                {
+                    Exito = false,
+                    Mensaje = "Contraseña incorrecta. No se puede eliminar al cliente."
+                };
             }
-            return rpta;
+
+            // Eliminación del cliente //
+            using (SqlConnection connStr = new SqlConnection(StringdeConexion))
+            {
+                connStr.Open();
+                SqlCommand cmd = new SqlCommand("EliminarCliente", connStr);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id_usu", id_usua);
+                cmd.ExecuteNonQuery();
+            }
+            return new ResultadoEliminacion
+            {
+                Exito = true,
+                Mensaje = "Cliente eliminado correctamente."
+            };
         }
         public bool cambioFotoPerfil(int id_usu, byte[] fotoPerfil, string extension, string StringdeConexion)
         {

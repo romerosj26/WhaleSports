@@ -97,18 +97,18 @@
 
         <!-- Modal Confirmacón de Eliminar Administrador-->
         <div id="modalConfirmarEliminacion" class="modal">
-            <form asp-action="Eliminar" asp-controller="Administrador" method="post">
+            <form asp-action="EliminarCliente" asp-controller="Administrador" method="post">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Confirmar Eliminación</h5>
                         <button type="button" class="btn-close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>¿Estás seguro de que deseas eliminar este administrador? Esta acción no se puede deshacer.</p>
+                        <p>¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.</p>
                         <div class="mb-3">
                             <label class="form-label">Confirma contraseña:</label>
                             <input type="password" name="PasswordConfirm" class="form-control"/>
-                            <input type="hidden" id="idAdministradorEliminarConfirm" name="idAdministrador" value="" />
+                            <input type="hidden" id="id_usuEliminarConfirm" name="id_usu" value="" />
                         </div>
                     </div>
                     <div class="modal-buttons">

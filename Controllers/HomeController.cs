@@ -176,7 +176,7 @@ namespace WS_2_0.Controllers
             string mensaje = usuario.Nombre;
             try
             {
-                 string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
+                string connStr = _configuration.GetConnectionString("StringCONSQLlocal");
                 Guid token = Guid.NewGuid();
                 DateTime expiration = DateTime.Now.AddMinutes(10); //Tiempo de expiración del token
 

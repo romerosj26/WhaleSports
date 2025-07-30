@@ -1,37 +1,74 @@
+@{
+    var nombre = HttpContextAccessor.HttpContext?.Session.GetString("Nombre");
+    var id_usu = HttpContextAccessor.HttpContext?.Session.GetString("id_usu");
+          var idAdministrador = HttpContextAccessor.HttpContext?.Session.GetString("idAdministrador");
+}
+@Html.AntiForgeryToken()
+@{
+    var id = Context.Session.GetInt32("idAdministrador");
+    if (id == null)
+    {
+        Context.Response.Redirect("/Home/LogIn");
+    }
+}
 @inject IHttpContextAccessor HttpContextAccessor
 
-<link href="~/css/administrador.css" rel="stylesheet">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Perfil | WhaleSports</title>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="~/css/administrador.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />   
+</head>
 
 <div class="sidebar">
-    <a asp-controller="Administrador" asp-action="Index"><i class="bi bi-caret-left-fill"></i></i></a>
     <a class="logo" title="WhaleSports" href="@Url.Action("Index","Home")">
         <span class="logo-container">
-          <img alt="Gymshark" data-locator-id="header-logo-select" src="~/css/Images/Logo_WS_btn_Blanco.png" decoding="async" data-nimg="fixed" class="logo-img">
+          <img src="~/css/Images/Logo_WS_btn_Blanco.png" alt="Gymshark" data-locator-id="header-logo-select" decoding="async" data-nimg="fixed" class="logo-img">
           <span class="logo-text">WhaleSports</span>
         </span>
     </a>
+    <div class="perfil">
+        <div class="perfil-container">
+        <img id="previewImage" src="~/css/images/Perfiles/Male.jpg" alt="Sin foto" class="profile-img"/>
+        <div class="user-dropdown-container">
+            <div class="user-icon" onclick="toggleDropdown()">
+                <p class="perfil-name">@nombre<span class="arrow">&#9662;</span></p>
+            </div>
+            <div class="user-dropdown" id="userDropdown">
+                @if (!string.IsNullOrEmpty(idAdministrador))
+                {
+                    <a href="@Url.Action("Index", "Administrador")">Inicio administrador</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Index", "Perfil")">Mi perfil</a>
+                }
+                <form asp-controller="Perfil" asp-action="LogOut" method="post">
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
     <div class="topbar">
         <ul class="topbar-list">
             <li style="position: relative;">
                 <div class="custom-dropdown usuario" data-key="usuariosDropdown">
-                    <div class="dropdown-selected">Usuarios</div>
-                    <span class="arrow">&#9662;</span>
+                    <div class="dropdown-selected">Usuarios<span class="arrow">&#9662;</span></div>
                     <div class="dropdown-menu">
                         <a href="@Url.Action("Administradores", "Administrador")">Empleados</a>
                         <a href="@Url.Action("Clientes", "Administrador")">Clientes</a>
                     </div>
                 </div>
             </li>
-            
-            <li>Productos</li>
+            <li>
+                <a href="@Url.Action("Index", "Productos")">Productos</a>
+            </li>
             <li>Pedidos</li>
             <li>Reportes/Estadisticas</li>
         </ul>
     </div>
-</div>
-        <form asp-action="LogOut" asp-controller="Perfil" method="post">
-            <button type="submit" class="btn-cerrar-sesion">
-                <i class="fas fa-sign-out-alt"></i>
-            </button>
-        </form>       
 </div>

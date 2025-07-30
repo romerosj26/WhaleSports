@@ -1,3 +1,11 @@
+@Html.AntiForgeryToken()
+@{
+    var id = Context.Session.GetInt32("idAdministrador");
+    if (id == null)
+    {
+        Context.Response.Redirect("/Home/LogIn");
+    }
+}
 @{
     ViewData["Title"] = "Administrador | WhaleSports";
 }
@@ -18,4 +26,5 @@
 
     <p>Bienvenido</p>
     <script src="/js/admin.js" asp-append-version="true"></script>
+    <script src="/js/eliminarCache.js"></script>
 </body>
