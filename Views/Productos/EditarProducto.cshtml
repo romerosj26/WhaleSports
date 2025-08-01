@@ -1,0 +1,94 @@
+@model WS_2_0.Models.EditarProductoViewModel
+@Html.AntiForgeryToken()
+@{
+    var id = Context.Session.GetInt32("idAdministrador");
+    if (id == null){
+        Context.Response.Redirect("/Home/LogIn");
+    }
+}
+@{
+    ViewData["Title"] = "EditarProducto";
+}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>Crear Producto | WhaleSports</title>
+        <link rel="stylesheet" href="~/css/administrador.css" />
+    </head>
+    <body>
+        <header>
+            <!-- TopBar -->
+            <partial name="_TopBarAdministrador"/>
+            <!-- SideBar-->
+            <partial name="_SideBar"/>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    Crear Producto
+                </div>
+                <div class="card-body">
+                    <form asp-action="EditarProducto" asp-controller="Productos" method="post" enctype="multipart/form-data">
+                        <input asp-for="Id" type="hidden" class="form-control">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputEmail4">Nombre:</label>
+                                <input asp-for="Nombre" type="text" class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputPassword4">Descripción:</label>
+                                <input asp-for="Descripcion" type="text" class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Precio:</label>
+                                <input asp-for="Precio" type="number" step="0.01" class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
+                                @if (Model != null && !string.IsNullOrEmpty(Model.ImagenUrl))
+                                {
+                                    <img src="@Url.Content("~/css/images/productos/" + Model.ImagenUrl)" class="card-img-top" />
+                                }
+                                else
+                                {
+                                    <p>No hay imagen disponible</p>
+                                }                               
+                                <label for="fileInput">Cambiar imagen:</label>
+                                <input asp-for="ImagenArchivo" type="file" id="fileInput" accept="image/*" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputPassword4">Stock</label>
+                                <input asp-for="Stock" type="number" class="form-control" id="inputPassword4">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Categoria">Categoría</label>
+                                <input asp-for="Categoria" type="text" class="form-control" />
+                                <span asp-validation-for="Categoria" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Activo" class="control-label"></label>
+                                @Html.DropDownListFor(model => model.Activo,
+                                new List<SelectListItem>
+                                {
+                                    new SelectListItem { Text = "Activo", Value = "true", Selected = Model.Activo },
+                                    new SelectListItem { Text = "Inactivo", Value = "false", Selected = !Model.Activo }
+                                },
+                                htmlAttributes: new { @class = "form-control" })
+                                <span asp-validation-for="Activo" class="text-danger"></span>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                            <a asp-action="Index" asp-controller="Productos" class="btn btn-danger">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script src="/js/admin.js" asp-append-version="true"></script>
+        <script src="/js/eliminarCache.js"></script>
+        <script>
+            $('form').removeData('validator');
+            $('form').removeData('unobtrusiveValidation');
+            $.validator.unobtrusive.parse('form');
+        </script>
+    </body>
+</html>
